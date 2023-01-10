@@ -1,0 +1,10 @@
+[
+  {
+    "path": "/user",
+    "data": {
+      "id": 1,
+      "name": "Anonymous",
+      "role": "admin"
+    }
+  }
+]
