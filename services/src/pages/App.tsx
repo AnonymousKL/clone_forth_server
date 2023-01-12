@@ -1,14 +1,9 @@
-
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="text-center">
-          <h1>Wellcome to FOUR</h1>
-        </div>
-      </header>
+      <h1>Logged In</h1>
     </div>
-  );
+  )
 }
 
 export default App;
