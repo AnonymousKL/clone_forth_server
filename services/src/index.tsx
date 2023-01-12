@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import Theme from 'components/Theme';
@@ -15,8 +14,8 @@ i18n.use(initReactI18next).init({
     en: { translation: en },
     vi: { translation: vi },
   },
-  lng: "vi",
-  fallbackLng: "en",
+  lng: "en",
+  fallbackLng: "vi",
   interpolation: {
     escapeValue: false,
   },
@@ -29,7 +28,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Theme>
-      <RouterProvider router={router} />
+      {router}
     </Theme>
   </React.StrictMode>
 );
