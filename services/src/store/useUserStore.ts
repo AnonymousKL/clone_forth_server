@@ -10,8 +10,10 @@ interface User {
 
 interface UserState {
   user: User,
+  isLoggedIn: boolean,
   fetching: boolean,
   errorMessage: string,
+  setIsLoggedIn: (loginState: boolean) => void,
   fetch: () => void,
 }
 
@@ -21,8 +23,10 @@ const useUserStore = create<UserState>()((set) => ({
     name: '',
     role: '',
   },
+  isLoggedIn: false,
   fetching: false,
   errorMessage: '',
+  setIsLoggedIn: (loginState: boolean) => { set({ isLoggedIn: loginState }) },
   fetch: async () => {
     set({ fetching: true })
 
