@@ -1,14 +1,25 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import App from "pages/App";
-import Login from "pages/Login";
+import { publicRoutes, privateRoutes } from './config';
 import RequireAuth from 'components/RequireAuth';
+import MainLayout from 'components/layout/MainLayout';
 
 const router = (
   <BrowserRouter>
     <Routes>
-      <Route path="/login" element={(<Login />)} />
+      {publicRoutes.map((route, index) => {
+        const Component = route.component
+        return <Route key={index} path={route.path} element={<Component />} />
+      })}
       <Route element={<RequireAuth />}>
-        <Route path="/" element={(<App />)} />
+        {privateRoutes.map((route, index) => {
+          const Component = route.component
+          const Layout = route.layout || MainLayout
+          return <Route key={index} path={route.path} element={
+            <Layout>
+              <Component />
+            </Layout>
+          } />
+        })}
       </Route>
     </Routes>
   </BrowserRouter>
