@@ -31,9 +31,7 @@ const useTheme = () => {
     localStorage.setItem('theme', theme)
   }
 
-  useEffect(() => {
-    getTheme()
-  }, [])
+  useEffect(() => { getTheme() }, [])
 
   return { theme, setTheme, onChangeTheme }
 }
