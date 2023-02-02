@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from './config';
 import RequireAuth from 'components/RequireAuth';
 import MainLayout from 'components/layout/MainLayout';
+import Error from 'pages/404';
 
 const router = (
   <BrowserRouter>
@@ -21,6 +22,7 @@ const router = (
           } />
         })}
       </Route>
+      <Route path="*" element={<Error />} />
     </Routes>
   </BrowserRouter>
 )
