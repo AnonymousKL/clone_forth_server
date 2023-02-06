@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom"
 import useAuth from "hooks/useAuth"
+import MainLayout from "components/layout/MainLayout"
 
 const RequireAuth = () => {
   const { isLoggedIn } = useAuth()
@@ -9,7 +10,11 @@ const RequireAuth = () => {
       <Navigate to="/login" replace />
     )
   }
-  return <Outlet />
+  return (
+    <MainLayout>
+      <Outlet />
+    </MainLayout>
+  )
 }
 
 export default RequireAuth

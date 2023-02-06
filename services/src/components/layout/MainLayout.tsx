@@ -1,10 +1,12 @@
-import Header from "./Header"
+import Header from "components/layout/Header"
 
 const MainLayout = ({ children }: any) => {
   return (
-    <div className="">
+    <div className="min-h-screen">
       <Header />
-      {children}
+      <div className="px-14 pt-6">
+        {children}
+      </div>
     </div>
   )
 }

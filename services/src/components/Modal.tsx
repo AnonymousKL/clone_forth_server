@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { MutableRefObject, ReactNode, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import XIcon from 'components/svg-icon/XIcon'
 
 type Props = {
   title?: string,
@@ -34,9 +35,13 @@ const Modal = ({ title, children, noModalBg = false, contentWrapPadding = 'p-3',
           {noModalBg ? (
             <>{children}</>
           ) : (
-            <div className="m-auto rounded-10 relative bg-white dark:bg-slate-300 min-w-3/4 md:min-w-2/4 xl:min-w-1/4 w-fit" ref={contentRef} onClick={(e) => e.stopPropagation()}>
-              <p className="py-10p px-14 bg-blue-4/5 text-dark-primary rounded-t-10 text-center text-lg font-medium relative">
+            <div className="m-auto rounded-5 relative bg-white min-w-3/4 md:min-w-2/4 xl:min-w-1/4 w-fit" ref={contentRef} onClick={(e) => e.stopPropagation()}>
+              <p className="py-10p px-14 text-white bg-primary-1 rounded-t-5 text-center text-lg font-medium relative">
                 {title}
+                <XIcon
+                  className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                  onClick={onClose}
+                />
               </p>
               <div className={clsx(contentWrapPadding, contentWrapClass)}>
                 {children}
