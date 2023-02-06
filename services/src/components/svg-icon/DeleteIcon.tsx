@@ -1,0 +1,9 @@
+const DeleteIcon = (props: any) => {
+  return (
+    <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M12.5 4.83333V4.5H12.8333H13.3333V4V2.33333V1.83333H12.8333H10.1238L9.43688 1.14645L9.29043 1H9.08332H4.91666H4.70955L4.5631 1.14645L3.87622 1.83333H1.16666H0.666656V2.33333V4V4.5H1.16666H1.49999V4.83333V14.8333C1.49999 16.0261 2.47385 17 3.66666 17H10.3333C11.5261 17 12.5 16.0261 12.5 14.8333V4.83333ZM4.16666 7H9.83332V14.3333H4.16666V7Z" fill="white" stroke="black" />
+    </svg>
+  )
+}
+
+export default DeleteIcon
