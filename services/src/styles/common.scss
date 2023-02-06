@@ -1,0 +1,13 @@
+.text-pri-highest,
+.text-pri-high {
+  @apply text-red-1;
+}
+.text-pri-medium {
+  @apply text-orange-1;
+}
+.text-pri-low {
+  @apply text-primary-2;
+}
+.text-pri-lowest {
+  @apply text-primary-1;
+}
