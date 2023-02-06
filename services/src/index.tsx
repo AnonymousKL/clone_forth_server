@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import Theme from 'components/Theme';
-import router from 'routes';
 import 'styles/index.scss';
 
 import en from 'i18n/en.json'
 import vi from 'i18n/vi.json'
+import App from 'pages/App';
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -21,14 +22,18 @@ i18n.use(initReactI18next).init({
   },
 })
 
+const queryClient = new QueryClient()
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
   <React.StrictMode>
-    <Theme>
-      {router}
-    </Theme>
+    <QueryClientProvider client={queryClient}>
+      <Theme>
+        <App />
+      </Theme>
+    </QueryClientProvider>
   </React.StrictMode>
 );
