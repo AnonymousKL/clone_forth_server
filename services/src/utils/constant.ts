@@ -2,43 +2,39 @@ export const menus = [
   {
     title: 'Dashboard',
     link: '/',
-    children: {
-      title: ''
-    }
   },
   {
     title: 'Projects',
-    link: '/project',
+    link: '/projects',
     children: {
       title: ''
     }
   },
   {
     title: 'Members',
-    link: '/project',
+    link: '/users',
     children: {
       title: ''
     }
   },
   {
     title: 'Sales',
-    link: '/project',
-    children: {
-      title: ''
-    }
+    link: '/sales',
   },
   {
     title: 'Contract',
-    link: '/project',
-    children: {
-      title: ''
-    }
+    link: '/contract',
   },
   {
     title: 'Cash Flow',
-    link: '/project',
-    children: {
-      title: ''
-    }
+    link: '/cashflow',
   }
 ]
+
+export const projectStatus = {
+  planning: 'Planning',
+  completed: 'Completed',
+  processing: 'Processing',
+  cancel: 'Cancel',
+  overdue: 'Overdue'
+}
