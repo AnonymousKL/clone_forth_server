@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"
+import { apiUrl } from "services/api";
 import axiosInstance from "__mocks"
+import Modal from "components/Modal";
 import { ReactComponent as Logo } from 'assets/icon/logo.svg';
 import { ReactComponent as LogoText } from 'assets/icon/logo-text.svg';
 import { ReactComponent as Spinner } from 'assets/icon/spinner-solid.svg';
-import Modal from "components/Modal";
 
 type FormField = {
   email: string,
@@ -23,6 +24,7 @@ const Login = () => {
   const [error, setError] = useState<{ email?: string, password?: string }>({})
   const [formData, setFormData] = useState(initFormData)
   const [isLogging, setIsLogging] = useState(false)
+  const [loginErr, setLoginErr] = useState(false)
   const { t } = useTranslation()
   let navigate = useNavigate()
 
@@ -32,12 +34,18 @@ const Login = () => {
     setError({})
 
     if (!validate(validateField)) {
-      const res = await axiosInstance.post('/login', formData)
-      if (res.data.token) {
-        localStorage.setItem('token', res.data.token)
-        navigate('/')
-      } else {
-        navigate('/login')
+      try {
+        const res = await axiosInstance.post(apiUrl + '/login', formData)
+        if (res.data.access_token) {
+          localStorage.setItem('token', res.data.access_token)
+          navigate('/')
+        } else {
+          setIsLogging(false)
+          navigate('/login')
+        }
+      } catch (err) {
+        setLoginErr(true)
+        setIsLogging(false)
       }
     }
 
@@ -76,6 +84,9 @@ const Login = () => {
             </div>
           </div>
           <form className="mt-5" onSubmit={handleSubmitForm}>
+            {loginErr && (
+              <p className="mb-2 text-sm text-center text-red-600">{t('Wrong email or password')}</p>
+            )}
             <div className="rounded-5 p-12 shadow-4p">
               <div className="mb-4">
                 <label>Email <span className="text-red-600">*</span></label>
