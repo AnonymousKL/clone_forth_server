@@ -130,7 +130,6 @@ const statusOptions = [
 const Projects = () => {
   const [isShowModal, setShowModal] = useState(false)
   const navigate = useNavigate()
-
   const { isLoading, data, error } = useQuery<any>('fetchProjects',
     () => fetchData(apiUrl + '/projects/').then(res => res.data)
   )
