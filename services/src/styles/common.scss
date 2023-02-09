@@ -11,3 +11,18 @@
 .text-pri-lowest {
   @apply text-primary-1;
 }
+.status-planning {
+  @apply bg-green-2;
+}
+.status-inprogress {
+  @apply bg-primary-4;
+}
+.status-completed {
+  @apply bg-green-1;
+}
+.status-overdue {
+  @apply bg-red-1;
+}
+.status-cancel {
+  @apply bg-gray-1;
+}

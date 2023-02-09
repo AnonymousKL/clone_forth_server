@@ -31,10 +31,87 @@ export const menus = [
   }
 ]
 
+export const statusOptions = [
+  {
+    name: 'All status',
+    value: 'All'
+  },
+  {
+    name: 'Planning',
+    value: 'Planning'
+  },
+  {
+    name: 'Inprogress',
+    value: 'Inprogress'
+  },
+  {
+    name: 'Completed',
+    value: 'completed'
+  },
+  {
+    name: 'Overdue',
+    value: 'Overdue'
+  },
+  {
+    name: 'Cancel',
+    value: 'Cancel'
+  },
+]
+
+export const healthOptions = [
+  {
+    name: 'Strong',
+    value: 'Strong'
+  },
+  {
+    name: 'Weak',
+    value: 'Weak',
+  }
+]
+
+export const priorityOptions = [
+  {
+    name: 'Highest',
+    value: 'Highest'
+  },
+  {
+    name: 'High',
+    value: 'High',
+  },
+  {
+    name: 'Medium',
+    value: 'Medium',
+  },
+  {
+    name: 'Low',
+    value: 'Low',
+  },
+  {
+    name: 'Lowest',
+    value: 'Lowest',
+  }
+]
+
 export const projectStatus = {
-  planning: 'Planning',
-  completed: 'Completed',
-  processing: 'Processing',
-  cancel: 'Cancel',
-  overdue: 'Overdue'
+  0: 'Planning',
+  1: 'Inprogress',
+  2: 'Completed',
+  3: 'Overdue',
+  4: 'Cancel'
+}
+
+export enum ProjectStatus {
+  Planning = 0,
+  Inprogress = 1,
+  Completed = 2,
+  Overdue = 3,
+  Canceled = 4
+}
+
+export enum Priority {
+  Highest,
+  High,
+  Medium,
+  Low,
+  Lowest
 }

@@ -1,3 +1,5 @@
+import axiosInstance from "__mocks"
+
 export const apiUrl = process.env.REACT_APP_API_URL
 
 export const apiEndpoint = {
@@ -6,4 +8,29 @@ export const apiEndpoint = {
   LOGIN: '/login',
   // Project
   GET_PROJECTS: '/projects',
+}
+
+export async function fetchProjects(params: {keyword: string, status: string}) {
+  const res = await axiosInstance.get(apiUrl + '/projects/', { params }).then(res => res.data)
+  return res.data
+}
+
+export async function fetchProjectByIdOrName(id: string | undefined) {
+  const res = await axiosInstance.get(apiUrl + `/projects/${id}`).then(res => res.data)
+  return res.data
+}
+
+export async function createProject(data: any) {
+  const res = await axiosInstance.post(apiUrl + '/projects/', data).then(res => res.data)
+  return res
+}
+
+export async function updateProject(id: string | undefined, data: any) {
+  const res = await axiosInstance.put(apiUrl + `/projects/${id}`, data).then(res => res.data)
+  return res
+}
+
+export async function deleteProject(id: number | string | null) {
+  const res = await axiosInstance.delete(apiUrl + `/projects/${id}`).then(res => res.data)
+  return res
 }
