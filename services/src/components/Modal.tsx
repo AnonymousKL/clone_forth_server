@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { MutableRefObject, ReactNode, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import XIcon from 'components/svg-icon/XIcon'
+import Button from 'components/Button'
 
 type Props = {
   title?: string,
@@ -10,10 +11,22 @@ type Props = {
   contentWrapPadding?: string,
   contentWrapClass?: string,
   children?: ReactNode,
+  actionButton?: boolean,
+  onAccept?: (e: any) => void,
+  onCancel?: (e: any) => void,
   onClose: (e: any) => void,
 }
 
-const Modal = ({ title, children, noModalBg = false, contentWrapPadding = 'p-3', contentWrapClass, onClose }: Props) => {
+const Modal = ({
+  title,
+  children,
+  noModalBg = false,
+  contentWrapPadding = 'p-3',
+  contentWrapClass,
+  actionButton = false,
+  onAccept,
+  onCancel,
+  onClose }: Props) => {
   const contentRef: MutableRefObject<null | any> = useRef(null)
 
   useEffect(() => {
@@ -45,6 +58,12 @@ const Modal = ({ title, children, noModalBg = false, contentWrapPadding = 'p-3',
               </p>
               <div className={clsx(contentWrapPadding, contentWrapClass)}>
                 {children}
+                {actionButton && (
+                  <div className="flex justify-center mt-6">
+                    <Button className="mr-7" onClick={onCancel}>Cancel</Button>
+                    <Button variant="red" onClick={onAccept}>Delete</Button>
+                  </div>
+                )}
               </div>
             </div>
           )}

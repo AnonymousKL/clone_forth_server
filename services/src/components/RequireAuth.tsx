@@ -4,7 +4,6 @@ import MainLayout from "components/layout/MainLayout"
 
 const RequireAuth = () => {
   const { isLoggedIn } = useAuth()
-  console.log(isLoggedIn)
 
   if (!isLoggedIn) {
     return (

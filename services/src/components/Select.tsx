@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, MutableRefObject } from 'react'
 import clsx from 'clsx'
 import { useClickOutside } from 'hooks/useClickOutside'
 import ArrowDownIcon from 'components/svg-icon/ArrowDownIcon'
+import CheckIcon from 'components/svg-icon/CheckIcon'
 
 type Option = {
   // title: string,
@@ -14,9 +15,11 @@ type Props = {
   className?: string,
   customWidth?: boolean,
   selectClassName?: string,
-  rounded?: boolean,
+  selectedClassName?: string,
+  roundedClassName?: string,
   defaultSelected?: any,
   showOptionIcon?: boolean,
+  showSelectedIcon?: boolean,
   arrowIconClass?: string,
   onSelect?: (option: any) => void,
   onSelected?: (option: any) => void,
@@ -27,9 +30,11 @@ const Select = ({
   className = 'w-max',
   customWidth = false,
   selectClassName,
-  rounded = false,
+  selectedClassName = 'font-semibold',
+  roundedClassName,
   defaultSelected = options[0],
   showOptionIcon = false,
+  showSelectedIcon = false,
   arrowIconClass = 'fill-dark-primary dark:fill-white stroke-none ',
   onSelect,
   onSelected }: Props) => {
@@ -58,18 +63,19 @@ const Select = ({
     }
   }, [])
 
-  const roundedClass = 'px-7 py-3 rounded-3xl bg-gray-4 dark:bg-blue-1'
-
   return (
     <div ref={selectRef} className={clsx('relative', className)}
       onClick={() => setActive(!active)}
     >
       <div className={clsx('flex items-center cursor-pointer justify-between',
-        rounded ? roundedClass : 'px-[17px] py-1.5 border-gray-3 rounded-[5px] border',
+        roundedClassName || 'px-[17px] py-1.5 border-gray-3 rounded-[5px] border',
         selectClassName)}
       >
-        <div className="mr-[22px] flex">
-          <span className="text-ellipsis overflow-hidden inline-block align-middle shrink-0 text-gray-5 font-semibold">
+        <div className={clsx("mr-[22px] flex items-center", selectedClassName)}>
+          {showSelectedIcon && (
+            <span className={clsx('w-5 h-5 rounded-5 mr-2', `status-${selected.name.toLowerCase()}`)}></span>
+          )}
+          <span className="text-ellipsis overflow-hidden inline-block align-middle shrink-0 text-gray-5">
             {selected.name ? selected.name : options[0].name}
           </span>
         </div>
@@ -84,10 +90,10 @@ const Select = ({
               onClick={() => handleSelect(option)}
             >
               <p className="">{option.name}</p>
-              {/* {selected.value === option.value ?
-                (<SvgIcon name="check" className="w-5 h-5 stroke-none dark:fill-white fill-gray-3"/>)
+              {selected.value === option.value ?
+                (<CheckIcon />)
                 : (<span className="w-5"></span>)
-              } */}
+              }
             </li>
           ))}
         </ul>

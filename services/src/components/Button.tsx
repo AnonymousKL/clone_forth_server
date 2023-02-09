@@ -2,19 +2,21 @@ import clsx from "clsx"
 import { ReactNode } from "react"
 
 type ButtonProps = {
-  variant?: 'light' | 'dark',
+  type?: "button" | "submit" | "reset",
+  variant?: 'light' | 'dark' | 'red',
   size?: 'sm' | 'md' | 'lg',
   className?: string,
   children?: ReactNode,
-  onClick: () => void,
+  onClick?: (e: any) => void,
 }
 
 const Button = (props: ButtonProps) => {
-  const { variant = 'light', size = 'md', className, children, onClick } = props
+  const { variant = 'light', size = 'md', type = 'button', className, children, onClick } = props
 
   const variantClass = {
     light: 'bg-gray-3',
-    dark: 'text-white bg-primary-1'
+    dark: 'text-white bg-primary-1',
+    red: 'text-white bg-red-1'
   }
 
   const sizeClass = {
@@ -27,6 +29,7 @@ const Button = (props: ButtonProps) => {
     <button
       className={clsx('rounded-5', variantClass[variant], sizeClass[size], className)}
       onClick={onClick}
+      type={type}
     >
       {children}
     </button>
