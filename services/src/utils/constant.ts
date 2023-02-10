@@ -109,9 +109,14 @@ export enum ProjectStatus {
 }
 
 export enum Priority {
-  Highest,
-  High,
-  Medium,
-  Low,
-  Lowest
+  Lowest = 'Lowest',
+  Low = 'Low',
+  Medium = 'Medium',
+  High = 'High',
+  Highest = 'Highest'
+}
+
+export enum Health {
+  Strong = 'Strong',
+  Weak = 'Weak'
 }

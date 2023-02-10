@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { DatePicker, notification } from "antd"
-import { healthOptions, priorityOptions, statusOptions } from "utils/constant"
+import { Health, healthOptions, Priority, priorityOptions, statusOptions } from "utils/constant"
 import { createProject } from "services/api"
 import { Link, useNavigate } from "react-router-dom"
 import { ProjectStatus } from "utils/constant"
@@ -41,9 +41,9 @@ const Create = () => {
 
   register("StartDate")
   register("EndDate")
-  register("Health.Health")
-  register("Priority")
-  register("StatusID")
+  register("Health.Health", { value: Health.Strong })
+  register("Priority", { value: Priority.Medium })
+  register("StatusID", { value: ProjectStatus.Planning })
 
   return (
     <div>
@@ -122,11 +122,12 @@ const Create = () => {
                 selectedClassName="font-normal"
                 roundedClassName="px-2 py-1 rounded-5 border border-gray-2"
                 className="w-full mt-10p"
+                defaultSelected={statusOptions[1]}
                 options={statusOptions}
                 onSelect={(option) => setValue("StatusID", ProjectStatus[option.value])}
               />
             </div>
-            <div className="">
+            <div>
               <label>Priority</label>
               <Select
                 customWidth
@@ -134,6 +135,7 @@ const Create = () => {
                 roundedClassName="px-2 py-1 rounded-5 border border-gray-2"
                 className="w-full mt-10p"
                 options={priorityOptions}
+                defaultSelected={priorityOptions[2]}
                 onSelect={(option) => setValue("Priority", option.value)}
               />
             </div>
@@ -149,6 +151,7 @@ const Create = () => {
               roundedClassName="px-2 py-1 rounded-5 border border-gray-2"
               className="w-full mt-10p"
               options={healthOptions}
+              defaultSelected={healthOptions[0]}
               onSelect={(option) => setValue("Health.Health", option.value)}
             />
           </div>

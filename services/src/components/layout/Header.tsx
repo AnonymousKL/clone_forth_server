@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import useUserStore from 'store/useUserStore'
 import { ReactComponent as Logo } from 'assets/icon/logo.svg'
 import { ReactComponent as LogoText } from 'assets/icon/logo-text.svg'
 import { ReactComponent as UserIcon } from 'assets/icon/user.svg'
@@ -9,6 +10,15 @@ import QuestionIcon from 'components/svg-icon/QuestionIcon'
 import SettingIcon from 'components/svg-icon/SettingIcon'
 
 const Header = () => {
+  const user = useUserStore()
+  const navigate = useNavigate()
+
+  const logout = () => {
+    user.setIsLoggedIn(false)
+    localStorage.removeItem('token')
+    return navigate("/login")
+  }
+
   return (
     <header className="pt-3 px-5 border-b-[5px] border-primary-1">
       <div className="flex justify-between">
@@ -39,12 +49,11 @@ const Header = () => {
               <SettingIcon className="fill-gray-1 hover:fill-black transition-all" />
             </div>
             <div className="ml-4 cursor-pointer">
-              <UserIcon />
+              <UserIcon onClick={logout} />
             </div>
           </div>
         </div>
       </div>
-      <div></div>
     </header>
   )
 }
