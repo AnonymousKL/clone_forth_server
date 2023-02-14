@@ -1,3 +1,4 @@
+import queryString from "query-string"
 import axiosInstance from "__mocks"
 
 export const apiUrl = process.env.REACT_APP_API_URL
@@ -10,8 +11,9 @@ export const apiEndpoint = {
   GET_PROJECTS: '/projects',
 }
 
-export async function fetchProjects(params: {keyword: string, status: string}) {
-  const res = await axiosInstance.get(apiUrl + '/projects/', { params }).then(res => res.data)
+export async function fetchProjects(params: { keyword: string, status: string }) {
+  const formatedParams = queryString.stringify(params, { skipEmptyString: true })
+  const res = await axiosInstance.get(apiUrl + '/projects/', { params: formatedParams }).then(res => res.data)
   return res.data
 }
 
