@@ -95,7 +95,10 @@ const ProjectDetail = () => {
             <div>
               <label htmlFor="Description">Budget<span className="text-red-1">*</span></label>
               <input
-                {...register("Budget")}
+                {...register("Budget", {
+                  valueAsNumber: true,
+                  validate: (value) => value > 0,
+                })}
                 type="number"
                 defaultValue={data.Budget || ''}
                 className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
@@ -105,7 +108,11 @@ const ProjectDetail = () => {
             <div>
               <label htmlFor="ActualReceived">Actual Received<span className="text-red-1">*</span></label>
               <input
-                {...register("ActualReceived")}
+                {...register("ActualReceived", {
+                  valueAsNumber: true,
+                  validate: (value) => value > 0,
+                })}
+                type="number"
                 defaultValue={data.ActualReceived}
                 className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
               />

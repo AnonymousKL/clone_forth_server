@@ -1,5 +1,5 @@
-import queryString from "query-string"
 import axiosInstance from "__mocks"
+import { removeEmptyProps } from "utils/object"
 
 export const apiUrl = process.env.REACT_APP_API_URL
 
@@ -12,8 +12,8 @@ export const apiEndpoint = {
 }
 
 export async function fetchProjects(params: { keyword: string, status: string }) {
-  const formatedParams = queryString.stringify(params, { skipEmptyString: true })
-  const res = await axiosInstance.get(apiUrl + '/projects/', { params: formatedParams }).then(res => res.data)
+  const formatedParams = removeEmptyProps(params)
+  const res = await axiosInstance.get(apiUrl + '/projects', { params: formatedParams }).then(res => res.data)
   return res.data
 }
 
@@ -23,7 +23,7 @@ export async function fetchProjectByIdOrName(id: string | undefined) {
 }
 
 export async function createProject(data: any) {
-  const res = await axiosInstance.post(apiUrl + '/projects/', data).then(res => res.data)
+  const res = await axiosInstance.post(apiUrl + '/projects', data).then(res => res.data)
   return res
 }
 
@@ -34,5 +34,10 @@ export async function updateProject(id: string | undefined, data: any) {
 
 export async function deleteProject(id: number | string | null) {
   const res = await axiosInstance.delete(apiUrl + `/projects/${id}`).then(res => res.data)
+  return res
+}
+
+export async function fetchMembers(params?: any) {
+  const res = await axiosInstance.get(apiUrl + '/members', params).then(res => res.data)
   return res
 }
