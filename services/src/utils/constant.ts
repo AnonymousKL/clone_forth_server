@@ -34,7 +34,7 @@ export const menus = [
 export const statusOptions = [
   {
     name: 'All status',
-    value: 'All'
+    value: ''
   },
   {
     name: 'Planning',
@@ -46,7 +46,7 @@ export const statusOptions = [
   },
   {
     name: 'Completed',
-    value: 'completed'
+    value: 'Completed'
   },
   {
     name: 'Overdue',
