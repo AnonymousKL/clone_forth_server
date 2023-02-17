@@ -5,6 +5,9 @@ import Login from 'pages/Login';
 import Projects from 'pages/Projects';
 import Create from 'pages/projects/Create';
 import Dashboard from 'pages/Dashboard';
+import Members from 'pages/Members';
+import CreateMember from 'pages/members/Create';
+import MemberDetail from 'pages/members/Detail';
 import ProjectDetail from 'pages/projects/Detail';
 import NoAuth from 'components/NoAuth';
 
@@ -14,21 +17,23 @@ function App() {
       <Routes>
 
         {/* Private routes */}
-        <Route path="/" element={<RequireAuth />}>
+        <Route element={<RequireAuth />}>
           <Route path="" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="projects/create" element={<Create />} />
-          <Route path="users" element={<div>Users</div>} />
+          <Route path="members" element={<Members />} />
+          <Route path="members/:id" element={<MemberDetail />} />
+          <Route path="members/create" element={<CreateMember />} />
           <Route path="sales" element={<div>Sales</div>} />
           <Route path="contract" element={<div>Contract</div>} />
           <Route path="cashflow" element={<div>Cash Flow</div>} />
         </Route>
 
         {/* Public routes */}
-        <Route path="/" element={<NoAuth />}>
-          <Route path="login" element={<Login />} />
-        </Route>
+        {/* <Route element={<NoAuth />}> */}
+        <Route path="login" element={<NoAuth />} />
+        {/* </Route> */}
         <Route path="*" element={<Error />} />
 
       </Routes>

@@ -1,5 +1,6 @@
-import { Navigate, Outlet } from "react-router-dom"
+import { Navigate } from "react-router-dom"
 import useAuth from "hooks/useAuth"
+import Login from "pages/Login"
 
 const NoAuth = () => {
   const { isLoggedIn } = useAuth()
@@ -10,7 +11,7 @@ const NoAuth = () => {
     )
   }
   return (
-    <Outlet />
+    <Login />
   )
 }
 

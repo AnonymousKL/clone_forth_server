@@ -37,7 +37,33 @@ export async function deleteProject(id: number | string | null) {
   return res
 }
 
-export async function fetchMembers(params?: any) {
-  const res = await axiosInstance.get(apiUrl + '/members', params).then(res => res.data)
+export async function fetchMembers(params?: { keyword: string, team_id: string }) {
+  const formatedParams = removeEmptyProps(params)
+  const res = await axiosInstance.get(apiUrl + '/members', { params: formatedParams }).then(res => res.data)
+  return res.data
+}
+
+export async function fetchMemberByIdOrEmail(id?: any) {
+  const res = await axiosInstance.get(apiUrl + `/members/${id}`).then(res => res.data)
+  return res.data
+}
+
+export async function createMember(data: any) {
+  const res = await axiosInstance.post(apiUrl + '/members', data).then(res => res.data)
+  return res
+}
+
+export async function updateMember(id: string | undefined, data: any) {
+  const res = await axiosInstance.put(apiUrl + `/members/${id}`, data).then(res => res.data)
+  return res
+}
+
+export async function deleteMember(id: number | string | null) {
+  const res = await axiosInstance.delete(apiUrl + `/members/${id}`).then(res => res.data)
+  return res
+}
+
+export async function fetchTeams() {
+  const res = await axiosInstance.get(apiUrl + '/teams').then(res => res.data)
   return res
 }

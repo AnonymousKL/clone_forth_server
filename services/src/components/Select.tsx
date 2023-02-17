@@ -7,7 +7,7 @@ import CheckIcon from 'components/svg-icon/CheckIcon'
 type Option = {
   // title: string,
   name: string,
-  value: string,
+  value: string | number,
 }
 
 type Props = {

@@ -14,9 +14,9 @@ const Button = (props: ButtonProps) => {
   const { variant = 'light', size = 'md', type = 'button', className, children, onClick } = props
 
   const variantClass = {
-    light: 'bg-gray-3',
-    dark: 'text-white bg-primary-1',
-    red: 'text-white bg-red-1'
+    light: 'bg-gray-3 hover:bg-gray-3/80',
+    dark: 'text-white bg-primary-1 hover:bg-primary-1/80',
+    red: 'text-white bg-red-1 hover:bg-red-1/80'
   }
 
   const sizeClass = {
@@ -27,7 +27,7 @@ const Button = (props: ButtonProps) => {
 
   return (
     <button
-      className={clsx('rounded-5', variantClass[variant], sizeClass[size], className)}
+      className={clsx('rounded-5 transition-colors', variantClass[variant], sizeClass[size], className)}
       onClick={onClick}
       type={type}
     >

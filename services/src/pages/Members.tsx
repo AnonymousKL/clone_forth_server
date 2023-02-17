@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { notification } from "antd"
-import { deleteProject } from "services/api"
-import { statusOptions } from "utils/constant"
+import { deleteMember } from "services/api"
+import { teamOptions } from "utils/constant"
 import { useDebounce } from "hooks/useDebounce"
 import Search from "components/Search"
 import Modal from "components/Modal"
 import AddIcon from "components/svg-icon/AddIcon"
 import Select from "components/Select"
-import ProjectTable from "page-components/ProjectTable"
+import MemberTable from "page-components/MemberTable"
 
-const Projects = () => {
+const Members = () => {
   const [isShowModal, setShowModal] = useState(false)
-  const [projectIdInModal, setProjectIdInModal] = useState(null)
+  const [memberIdInModel, setMemberIdInModel] = useState(null)
   const [refetchProject, setRefetchProject] = useState(false)
   const [keyword, setKeyword] = useState('')
   const [formData, setFormData] = useState({
     keyword: '',
-    status: ''
+    team_id: ''
   })
   const debouncedKeyword = useDebounce(keyword, 1000)
 
@@ -25,21 +25,21 @@ const Projects = () => {
 
   const onShowActionDelete = (id: any) => {
     setShowModal(true)
-    setProjectIdInModal(id)
+    setMemberIdInModel(id)
   }
 
   const onDeleteProject = async () => {
     setShowModal(false)
-    const res = await deleteProject(projectIdInModal)
+    const res = await deleteMember(memberIdInModel)
     if (res.status === 'success') {
       notification.open({
         type: 'success',
-        message: 'Delete project successful',
+        message: 'Delete member successful',
       })
     } else {
       notification.open({
         type: 'error',
-        message: 'Cannot delete project',
+        message: 'Cannot delete member',
       })
     }
     setRefetchProject((refetchProject) => !refetchProject)
@@ -51,7 +51,7 @@ const Projects = () => {
 
   return (
     <div>
-      <p className="text-3xl font-bold text-primary-2">Projects</p>
+      <p className="text-3xl font-bold text-primary-2">Members</p>
       <div className="mt-7 w-1/2 grid grid-cols-2 gap-3">
         <Search
           iconPosition="right"
@@ -59,35 +59,35 @@ const Projects = () => {
           onChange={(e) => setKeyword(e.target.value)}
         />
         <Select
-          options={statusOptions}
-          onSelect={(option) => setFormData((prev) => ({ ...prev, status: option.value }))}
+          options={teamOptions}
+          onSelect={(option) => setFormData((prev) => ({ ...prev, team_id: option.value }))}
         />
       </div>
-      <ProjectTable
+      <MemberTable
         refetchProject={refetchProject}
         formData={formData}
         onShowActionDelete={onShowActionDelete}
       />
       <button
         className="fixed bottom-12 right-12"
-        onClick={() => navigate('/projects/create')}
+        onClick={() => navigate('/members/create')}
       >
         <AddIcon className="w-14 h-14" />
       </button>
       {isShowModal && (
         <Modal
           actionButton
-          title="Delete Project"
+          title="Delete Member"
           isShow={isShowModal}
           onClose={() => setShowModal(false)}
           onCancel={() => {
             setShowModal(false)
-            setProjectIdInModal(null)
+            setMemberIdInModel(null)
           }}
           onAccept={onDeleteProject}
         >
           <div className="bg-white px-8 py-4">
-            <p>Delete Project? This Action Cannot Be Undo!</p>
+            <p>Delete Member? This Action Cannot Be Undo!</p>
           </div>
         </Modal>
       )}
@@ -95,4 +95,4 @@ const Projects = () => {
   )
 }
 
-export default Projects
+export default Members
