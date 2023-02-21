@@ -2,13 +2,14 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { DatePicker, notification } from "antd"
 import { Health, healthOptions, Priority, priorityOptions, statusOptions } from "utils/constant"
-import { createProject } from "services/api"
+import { createProject, fetchMembers, fetchProjects } from "services/api"
 import { Link, useNavigate } from "react-router-dom"
 import { ProjectStatus } from "utils/constant"
 import Select from "components/Select"
 import Button from "components/Button"
 import Modal from "components/Modal"
 import SpinnerIcon from "components/svg-icon/SpinnerIcon"
+import ToggleCheckbox from "page-components/ToggleCheckbox"
 
 const Create = () => {
   const [isPosting, setIsPosting] = useState(false)
@@ -44,6 +45,7 @@ const Create = () => {
   register("Health.Health", { value: Health.Strong })
   register("Priority", { value: Priority.Medium })
   register("StatusID", { value: ProjectStatus.Planning })
+  register("Members", { value: [] })
 
   return (
     <div>
@@ -170,8 +172,13 @@ const Create = () => {
           </div>
         </div>
 
-        <div className="mb-5">
+        <div className="mb-5 flex gap-14">
           <p>Participants</p>
+          <ToggleCheckbox
+            queryKey="fetchMembers"
+            queryFunc={fetchMembers}
+            onChange={(checkedValues) => setValue("Members", checkedValues)}
+          />
         </div>
 
         <div className="flex justify-end">

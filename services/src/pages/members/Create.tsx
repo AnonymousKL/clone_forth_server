@@ -1,14 +1,14 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { DatePicker, notification } from "antd"
-import { roleOptions, statusOptions, teamOptions, workModelOptions } from "utils/constant"
-import { createMember, createProject } from "services/api"
+import { roleOptions, teamOptions, workModelOptions } from "utils/constant"
+import { createMember, fetchProjects } from "services/api"
 import { Link, useNavigate } from "react-router-dom"
-import { ProjectStatus } from "utils/constant"
 import Select from "components/Select"
 import Button from "components/Button"
 import Modal from "components/Modal"
 import SpinnerIcon from "components/svg-icon/SpinnerIcon"
+import ToggleCheckbox from "page-components/ToggleCheckbox"
 
 const CreateMember = () => {
   const [isPosting, setIsPosting] = useState(false)
@@ -43,6 +43,7 @@ const CreateMember = () => {
   register("Roles")
   register("WorkModel")
   register("StartDate")
+  register("ProjectIds", { value: [] })
 
   return (
     <div>
@@ -148,10 +149,18 @@ const CreateMember = () => {
           </div>
 
         </div>
+        <div className="mb-5 flex gap-14">
+          <p>Assign projects</p>
+          <ToggleCheckbox
+            queryKey="fetchProjects"
+            queryFunc={fetchProjects}
+            onChange={(checkedValues) => setValue("ProjectIds", checkedValues)}
+          />
+        </div>
 
         <div className="flex justify-end">
           <Button type="reset" className="mr-4">
-            <Link to="/projects">Cancel</Link>
+            <Link to="/members">Cancel</Link>
           </Button>
           <Button type="submit" variant="dark">Create</Button>
         </div>

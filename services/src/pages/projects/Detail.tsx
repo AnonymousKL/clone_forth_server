@@ -4,12 +4,13 @@ import { useQuery } from "react-query"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { DatePicker, notification } from "antd"
-import { fetchProjectByIdOrName, updateProject } from "services/api"
+import { fetchMembers, fetchProjectByIdOrName, updateProject } from "services/api"
 import { healthOptions, priorityOptions, projectStatus, ProjectStatus, statusOptions } from "utils/constant"
 import Select from "components/Select"
 import Button from "components/Button"
 import Modal from "components/Modal"
 import SpinnerIcon from "components/svg-icon/SpinnerIcon"
+import ToggleCheckbox from 'page-components/ToggleCheckbox'
 
 const ProjectDetail = () => {
   const [isPosting, setIsPosting] = useState(false)
@@ -43,12 +44,6 @@ const ProjectDetail = () => {
     setIsPosting(false)
   }
 
-  register("StartDate")
-  register("EndDate")
-  register("Health.Health")
-  register("Priority")
-  register("StatusID")
-
   if (isLoading) {
     return <div>Loading ...</div>
   }
@@ -56,6 +51,13 @@ const ProjectDetail = () => {
   if (error) {
     return <div>Error</div>
   }
+
+  register("StartDate")
+  register("EndDate")
+  register("Health.Health")
+  register("Priority")
+  register("StatusID")
+  register("Members", { value: data.Members?.map((member: { ID: number }) => member.ID) || [] })
 
   return (
     <div>
@@ -191,8 +193,14 @@ const ProjectDetail = () => {
           </div>
         </div>
 
-        <div className="mb-5">
+        <div className="mb-5 flex gap-14">
           <p>Participants</p>
+          <ToggleCheckbox
+            queryKey="fetchMembers"
+            queryFunc={fetchMembers}
+            onChange={(checkedValues) => setValue("Members", checkedValues)}
+            defaultSelected={data.Members?.map((member: { ID: number }) => member.ID)}
+          />
         </div>
 
         <div className="flex justify-end">
