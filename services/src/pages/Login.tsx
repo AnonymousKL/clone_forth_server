@@ -38,7 +38,7 @@ const Login = () => {
         const res = await axiosInstance.post(apiUrl + '/login', formData)
         if (res.data.access_token) {
           localStorage.setItem('token', res.data.access_token)
-          navigate('/')
+          navigate('/projects')
         } else {
           setIsLogging(false)
           navigate('/login')

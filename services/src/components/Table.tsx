@@ -44,7 +44,7 @@ const renderTableCell = (head: Object[], obj: Object) => {
   for (const property in obj) {
     if (typeof obj[property as keyof object] !== 'object') {
       if (headKey.includes(property)) {
-        jsx.push(<td className="px-2 py-4 whitespace-nowrap" key={property}>
+        jsx.push(<td className="px-2 py-4 whitespace-nowrap max-w-[150px] truncate text-center" key={property}>
           {obj[property as keyof object]}
         </td>
         )
@@ -53,7 +53,7 @@ const renderTableCell = (head: Object[], obj: Object) => {
       const record: CustomObj = head.find((obj: CustomObj) => {
         return obj.key === property
       }) || {}
-      jsx.push(<td className={`${record?.tdClass}`} key={property}>
+      jsx.push(<td className={clsx(`${record?.tdClass}`)} key={property}>
         {renderCustom(head, obj[property as keyof object], property)}
       </td>)
     }
@@ -105,7 +105,7 @@ const Table = ({ head, data, className }: Props) => {
               activeSortCol === item.key && 'active')}
             >
               {/* Remove w-max */}
-              <div className="flex">
+              <div className="flex justify-center">
                 {item.sortable ? (
                   <button type="button"
                     className={`inline-flex items-center shrink-0 ${sortDirection === 'asc' ? 'arrow-down' : 'arrow-up'}`}

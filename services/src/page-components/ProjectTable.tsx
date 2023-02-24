@@ -48,22 +48,21 @@ const ProjectTable = ({ refetchProject, formData, onShowActionDelete }: ProjectT
 
   const columns = [
     {
-      title: 'ID',
+      title: '',
       key: 'ID',
-      sortable: true,
     },
     {
       title: 'Status',
       key: 'Status',
       render: ({ status }: any) => (
-        <Badge type={status}>{status}</Badge>
+        <Badge className="mx-auto" type={status}>{status}</Badge>
       )
     },
     {
       title: 'Project Name',
       key: 'Name',
       render: ({ name, id }: any) => (
-        <div className="max-w-[100px] truncate text-center">
+        <div className="max-w-[100px] truncate text-center mx-auto">
           <Link to={`${id}`} className="text-primary-4">{name}</Link>
         </div>
       )

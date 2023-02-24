@@ -175,8 +175,9 @@ const Create = () => {
         <div className="mb-5 flex gap-14">
           <p>Participants</p>
           <ToggleCheckbox
+            showSelect
             queryKey="fetchMembers"
-            queryFunc={fetchMembers}
+            queryFunc={(params) => fetchMembers(params)}
             onChange={(checkedValues) => setValue("Members", checkedValues)}
           />
         </div>

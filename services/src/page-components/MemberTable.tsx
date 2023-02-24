@@ -43,9 +43,8 @@ const MemberTable = ({ refetchProject, formData, onShowActionDelete }: MemberTab
 
   const columns = [
     {
-      title: 'ID',
+      title: '',
       key: 'ID',
-      sortable: true,
     },
     {
       title: 'Team',
@@ -55,7 +54,7 @@ const MemberTable = ({ refetchProject, formData, onShowActionDelete }: MemberTab
       title: 'Name',
       key: 'Name',
       render: ({ name, id }: any) => (
-        <div className="max-w-[100px] truncate text-center">
+        <div className="max-w-[100px] truncate text-center mx-auto">
           <Link to={`${id}`} className="text-primary-4">{name}</Link>
         </div>
       )

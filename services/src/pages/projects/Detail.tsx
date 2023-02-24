@@ -196,6 +196,7 @@ const ProjectDetail = () => {
         <div className="mb-5 flex gap-14">
           <p>Participants</p>
           <ToggleCheckbox
+            showSelect
             queryKey="fetchMembers"
             queryFunc={fetchMembers}
             onChange={(checkedValues) => setValue("Members", checkedValues)}

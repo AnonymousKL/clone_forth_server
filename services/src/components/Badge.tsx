@@ -3,11 +3,12 @@ import { ReactNode } from "react"
 
 type Props = {
   children: ReactNode,
+  className?: string,
   type: 'Cancel' | 'Completed' | 'Planing' | 'Overdue' | 'Inprogress'
 }
 
 const Badge = (props: Props) => {
-  const { children, type } = props
+  const { children, className, type } = props
   const typeColorClass = {
     Cancel: 'bg-gray-1',
     Overdue: 'bg-red-1',
@@ -17,7 +18,9 @@ const Badge = (props: Props) => {
   }
 
   return (
-    <p className={clsx("rounded-5 px-2 py-1 w-24 text-white text-center", typeColorClass[type as keyof Object])}>{children}</p>
+    <p className={clsx("rounded-5 px-2 py-1 w-24 text-white text-center", typeColorClass[type as keyof Object], className)}>
+      {children}
+    </p>
   )
 }
 
