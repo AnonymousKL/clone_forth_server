@@ -26,16 +26,18 @@ const MemberDetail = () => {
 
   const onSubmit = async (data: any) => {
     setIsPosting(true)
-    const res = await updateMember(id, data)
-    if (res.status === 'success') {
-      notification.open({
-        type: 'success',
-        message: 'Update member successful',
-      })
-      setTimeout(() => {
-        navigate('/members')
-      }, 1000)
-    } else {
+    try {
+      const res = await updateMember(id, data)
+      if (res.status === 'success') {
+        notification.open({
+          type: 'success',
+          message: 'Update member successful',
+        })
+        setTimeout(() => {
+          navigate('/members')
+        }, 1000)
+      }
+    } catch (err) {
       notification.open({
         type: 'error',
         message: 'Cannot update member',

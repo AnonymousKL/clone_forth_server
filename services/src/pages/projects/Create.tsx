@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { DatePicker, notification } from "antd"
 import { Health, healthOptions, Priority, priorityOptions, statusOptions } from "utils/constant"
-import { createProject, fetchMembers, fetchProjects } from "services/api"
+import { createProject, fetchMembers } from "services/api"
 import { Link, useNavigate } from "react-router-dom"
 import { ProjectStatus } from "utils/constant"
 import Select from "components/Select"
@@ -22,16 +22,18 @@ const Create = () => {
 
   const onSubmit = async (data: any) => {
     setIsPosting(true)
-    const res = await createProject(data)
-    if (res.status === 'success') {
-      notification.open({
-        type: 'success',
-        message: 'Create project successful',
-      })
-      setTimeout(() => {
-        navigate('/projects')
-      }, 1000)
-    } else {
+    try {
+      const res = await createProject(data)
+      if (res.status === 'success') {
+        notification.open({
+          type: 'success',
+          message: 'Create project successful',
+        })
+        setTimeout(() => {
+          navigate('/projects')
+        }, 1000)
+      }
+    } catch (err) {
       notification.open({
         type: 'error',
         message: 'Cannot create project',

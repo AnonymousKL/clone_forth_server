@@ -21,16 +21,18 @@ const CreateMember = () => {
 
   const onSubmit = async (data: any) => {
     setIsPosting(true)
-    const res = await createMember(data)
-    if (res.status === 'success') {
-      notification.open({
-        type: 'success',
-        message: 'Create member successful',
-      })
-      setTimeout(() => {
-        navigate('/members')
-      }, 1000)
-    } else {
+    try {
+      const res = await createMember(data)
+      if (res.status === 'success') {
+        notification.open({
+          type: 'success',
+          message: 'Create member successful',
+        })
+        setTimeout(() => {
+          navigate('/members')
+        }, 1000)
+      }
+    } catch (err) {
       notification.open({
         type: 'error',
         message: 'Cannot create member',

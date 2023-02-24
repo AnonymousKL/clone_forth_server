@@ -18,6 +18,7 @@ type Props = {
   selectedClassName?: string,
   roundedClassName?: string,
   defaultSelected?: any,
+  notSelect?: Option,
   showOptionIcon?: boolean,
   showSelectedIcon?: boolean,
   arrowIconClass?: string,
@@ -32,14 +33,15 @@ const Select = ({
   selectClassName,
   selectedClassName = 'font-semibold',
   roundedClassName,
-  defaultSelected = options[0],
+  defaultSelected,
+  notSelect = { name: "Select", value: '' },
   showOptionIcon = false,
   showSelectedIcon = false,
   arrowIconClass = 'fill-dark-primary dark:fill-white stroke-none ',
   onSelect,
   onSelected }: Props) => {
 
-  const [selected, setSelected] = useState(defaultSelected)
+  const [selected, setSelected] = useState(defaultSelected || notSelect)
   const [active, setActive] = useState(false)
   const selectRef: MutableRefObject<null | any> = useRef(null)
   const optionWrapRef: MutableRefObject<null | any> = useRef(null)
@@ -76,7 +78,7 @@ const Select = ({
             <span className={clsx('w-5 h-5 rounded-5 mr-2', `status-${selected.name.toLowerCase()}`)}></span>
           )}
           <span className="text-ellipsis overflow-hidden inline-block align-middle shrink-0 text-gray-5">
-            {selected.name ? selected.name : options[0].name}
+            {selected.name}
           </span>
         </div>
         <ArrowDownIcon className={clsx('w-[13px] h-[8px] transition duration-300 shrink-0', active ? 'rotate-180' : '', arrowIconClass)} />

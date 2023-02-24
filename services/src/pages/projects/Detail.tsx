@@ -22,20 +22,26 @@ const ProjectDetail = () => {
     setValue,
   } = useForm();
 
-  const { isLoading, data, error } = useQuery<any>(['fetchProjectByIdOrName', id], () => fetchProjectByIdOrName(id))
+  const { isLoading, data, error } = useQuery<any>(
+    ['fetchProjectByIdOrName', id],
+    () => fetchProjectByIdOrName(id),
+    { cacheTime: 0 }
+  )
 
   const onSubmit = async (data: any) => {
     setIsPosting(true)
-    const res = await updateProject(id, data)
-    if (res.status === 'success') {
-      notification.open({
-        type: 'success',
-        message: 'Update project successful',
-      })
-      setTimeout(() => {
-        navigate('/projects')
-      }, 1000)
-    } else {
+    try {
+      const res = await updateProject(id, data)
+      if (res.status === 'success') {
+        notification.open({
+          type: 'success',
+          message: 'Update project successful',
+        })
+        setTimeout(() => {
+          navigate('/projects')
+        }, 1000)
+      }
+    } catch (err) {
       notification.open({
         type: 'error',
         message: 'Cannot update project',
