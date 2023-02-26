@@ -31,6 +31,12 @@ const ToggleCheckbox = (props: ToggleCheckboxProps) => {
     setSelectedMembers(checkedValues?.length)
   }
 
+  const onClearAll = () => {
+    setSelectedMembers(0)
+    setDefaultSelectedState([])
+    onChange([])
+  }
+
   return (
     <div className="min-w-[250px]">
       <p className="cursor-pointer select-none font-semibold" onClick={() => setShow(!show)}>{selectedMembers} Selected
@@ -64,10 +70,7 @@ const ToggleCheckbox = (props: ToggleCheckboxProps) => {
               <Button
                 variant="dark"
                 className="block float-right"
-                onClick={() => {
-                  setSelectedMembers(0)
-                  setDefaultSelectedState([])
-                }}
+                onClick={onClearAll}
               >
                 Clear
               </Button>
