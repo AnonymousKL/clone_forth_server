@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useQuery } from "react-query"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { DatePicker, notification } from "antd"
+import { DatePicker, InputNumber, notification } from "antd"
 import { fetchMembers, fetchProjectByIdOrName, updateProject } from "services/api"
 import { healthOptions, priorityOptions, projectStatus, ProjectStatus, statusOptions } from "utils/constant"
 import Select from "components/Select"
@@ -58,6 +58,8 @@ const ProjectDetail = () => {
     return <div>Error</div>
   }
 
+  register("Budget")
+  register("ActualReceived")
   register("StartDate")
   register("EndDate")
   register("Health.Health")
@@ -73,7 +75,7 @@ const ProjectDetail = () => {
           <div>
             <label htmlFor="Name">Project Name<span className="text-red-1">*</span></label>
             <input
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
               defaultValue={data.Name}
               {...register("Name")}
               required
@@ -84,7 +86,7 @@ const ProjectDetail = () => {
             <input
               {...register("ClientName")}
               defaultValue={data.ClientName || ''}
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
               required
             />
           </div>
@@ -96,33 +98,30 @@ const ProjectDetail = () => {
             <textarea
               {...register("Description")}
               defaultValue={data.Description}
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
             ></textarea>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="Description">Budget<span className="text-red-1">*</span></label>
-              <input
-                {...register("Budget", {
-                  valueAsNumber: true,
-                  validate: (value) => value > 0,
-                })}
-                type="number"
+              <InputNumber
+                className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
                 defaultValue={data.Budget || ''}
-                className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => setValue("Budget", value)}
                 required
               />
             </div>
             <div>
               <label htmlFor="ActualReceived">Actual Received<span className="text-red-1">*</span></label>
-              <input
-                {...register("ActualReceived", {
-                  valueAsNumber: true,
-                  validate: (value) => value > 0,
-                })}
-                type="number"
-                defaultValue={data.ActualReceived}
-                className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              <InputNumber
+                className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
+                defaultValue={data.ActualReceived || ''}
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => setValue("ActualReceived", value)}
+                required
               />
             </div>
           </div>
@@ -194,7 +193,7 @@ const ProjectDetail = () => {
             <input
               {...register("Health.HealthReason")}
               defaultValue={data.Health.HealthReason || ''}
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
             />
           </div>
         </div>

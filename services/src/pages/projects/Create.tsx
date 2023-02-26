@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { DatePicker, notification } from "antd"
+import { DatePicker, InputNumber, notification } from "antd"
 import { Health, healthOptions, Priority, priorityOptions, statusOptions } from "utils/constant"
 import { createProject, fetchMembers } from "services/api"
 import { Link, useNavigate } from "react-router-dom"
@@ -42,6 +42,8 @@ const Create = () => {
     setIsPosting(false)
   }
 
+  register("Budget")
+  register("ActualReceived")
   register("StartDate")
   register("EndDate")
   register("Health.Health", { value: Health.Strong })
@@ -57,7 +59,7 @@ const Create = () => {
           <div>
             <label htmlFor="Name">Project Name<span className="text-red-1">*</span></label>
             <input
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
               {...register("Name")}
               required
             />
@@ -66,7 +68,7 @@ const Create = () => {
             <label htmlFor="Name">Client Name<span className="text-red-1">*</span></label>
             <input
               {...register("ClientName")}
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
               required
             />
           </div>
@@ -77,30 +79,28 @@ const Create = () => {
             <label htmlFor="Description">Description</label>
             <textarea
               {...register("Description")}
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
             ></textarea>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="Description">Budget<span className="text-red-1">*</span></label>
-              <input
-                {...register("Budget", {
-                  valueAsNumber: true,
-                  validate: (value) => value > 0,
-                })}
-                type="number"
-                className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              <InputNumber
+                className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => setValue("Budget", value)}
                 required
               />
             </div>
             <div>
-              <label htmlFor="ActualReceived">Actual Received</label>
-              <input
-                {...register("ActualReceived", {
-                  valueAsNumber: true,
-                  validate: (value) => value > 0,
-                })}
-                className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              <label htmlFor="ActualReceived">Actual Received<span className="text-red-1">*</span></label>
+              <InputNumber
+                className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => setValue("ActualReceived", value)}
+                required
               />
             </div>
           </div>
@@ -169,7 +169,7 @@ const Create = () => {
             <label htmlFor="HealthReason">Health Reason</label>
             <input
               {...register("Health.HealthReason")}
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
             />
           </div>
         </div>

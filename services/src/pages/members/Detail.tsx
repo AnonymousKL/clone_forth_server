@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useQuery } from "react-query"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { DatePicker, notification } from "antd"
+import { DatePicker, InputNumber, notification } from "antd"
 import { fetchMemberByIdOrEmail, fetchProjects, updateMember } from "services/api"
 import { roleOptions, teamOptions, workModelOptions } from "utils/constant"
 import Select from "components/Select"
@@ -22,7 +22,10 @@ const MemberDetail = () => {
     setValue,
   } = useForm()
 
-  const { isLoading, data, error } = useQuery<any>(['fetchMemberByIdOrEmail', id], () => fetchMemberByIdOrEmail(id))
+  const { isLoading, data, error } = useQuery<any>(
+    ['fetchMemberByIdOrEmail', id],
+    () => fetchMemberByIdOrEmail(id),
+    { cacheTime: 0 })
 
   const onSubmit = async (data: any) => {
     setIsPosting(true)
@@ -54,6 +57,8 @@ const MemberDetail = () => {
     return <div>Error</div>
   }
 
+  register("Salary")
+  register("OtherCost")
   register("Team")
   register("Roles")
   register("WorkModel")
@@ -68,7 +73,7 @@ const MemberDetail = () => {
           <div>
             <label htmlFor="Name">Name<span className="text-red-1">*</span></label>
             <input
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
               defaultValue={data.Name}
               {...register("Name")}
               required
@@ -79,7 +84,7 @@ const MemberDetail = () => {
             <input
               {...register("Email")}
               defaultValue={data.Email || ''}
-              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+              className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
               required
             />
           </div>
@@ -140,28 +145,23 @@ const MemberDetail = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="Salary">Salary<span className="text-red-1">*</span></label>
-              <input
-                {...register("Salary", {
-                  valueAsNumber: true,
-                  validate: (value) => value > 0,
-                })}
-                type="number"
+              <InputNumber
+                className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
                 defaultValue={data.Salary || ''}
-                className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
-                step="any"
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => setValue("Salary", value)}
                 required
               />
             </div>
             <div>
               <label>Other Cost<span className="text-red-1">*</span></label>
-              <input
-                {...register("OtherCost", {
-                  valueAsNumber: true,
-                  validate: (value) => value > 0,
-                })}
-                type="number"
+              <InputNumber
+                className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
                 defaultValue={data.OtherCost || ''}
-                className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2"
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => setValue("OtherCost", value)}
                 required
               />
             </div>
