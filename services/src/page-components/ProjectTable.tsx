@@ -16,8 +16,8 @@ type ProjectTableProps = {
 }
 
 const formatProjectsData = (data: any) => {
-  let formated = data.map((item: any) => ({
-    ID: item.ID,
+  let formated = data.map((item: any, index: number) => ({
+    ID: index + 1,
     Status: {
       status: projectStatus[item.StatusID as keyof Object]
     },
@@ -48,7 +48,7 @@ const ProjectTable = ({ refetchProject, formData, onShowActionDelete }: ProjectT
 
   const columns = [
     {
-      title: '',
+      title: 'No.',
       key: 'ID',
     },
     {

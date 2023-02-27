@@ -15,8 +15,8 @@ type MemberTableProps = {
 }
 
 const formatMembersData = (data: any) => {
-  let formated = data.map((item: any) => ({
-    ID: item.ID,
+  let formated = data.map((item: any, index: number) => ({
+    ID: index + 1,
     Team: item.Team.Name,
     Name: {
       name: item.Name,
@@ -43,7 +43,7 @@ const MemberTable = ({ refetchProject, formData, onShowActionDelete }: MemberTab
 
   const columns = [
     {
-      title: '',
+      title: 'No.',
       key: 'ID',
     },
     {
