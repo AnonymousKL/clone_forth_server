@@ -8,6 +8,7 @@ import Search from 'components/Search'
 import RingIcon from 'components/svg-icon/RingIcon'
 import QuestionIcon from 'components/svg-icon/QuestionIcon'
 import SettingIcon from 'components/svg-icon/SettingIcon'
+import MenuMobile from 'components/MenuMobile'
 
 const Header = () => {
   const user = useUserStore()
@@ -21,7 +22,7 @@ const Header = () => {
 
   return (
     <header className="pt-3 px-5 border-b-[5px] border-primary-1">
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-4">
         <div className="h-fit">
           <Link to="/">
             <div className="flex mb-3 justify-center items-center">
@@ -37,21 +38,22 @@ const Header = () => {
           <Menu />
         </div>
         <div className="header-right mb-3 h-fit self-end flex">
-          <Search inputClassName="h-8" />
+          <Search className="hidden lg:block" inputClassName="h-8" />
           <div className="flex items-center">
-            <div className="ml-3 cursor-pointer">
+            <div className="ml-2 lg:ml-3 cursor-pointer">
               <RingIcon className="fill-gray-1 hover:fill-black transition-all" />
             </div>
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-3 lg:ml-4 cursor-pointer">
               <QuestionIcon className="fill-gray-1 hover:fill-black transition-all" />
             </div>
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-3 lg:ml-4 cursor-pointer">
               <SettingIcon className="fill-gray-1 hover:fill-black transition-all" />
             </div>
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-3 lg:ml-4 cursor-pointer">
               <UserIcon onClick={logout} />
             </div>
           </div>
+          <MenuMobile className="lg:hidden" />
         </div>
       </div>
     </header>

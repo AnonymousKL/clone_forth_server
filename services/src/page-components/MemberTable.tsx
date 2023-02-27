@@ -119,7 +119,9 @@ const MemberTable = ({ refetchProject, formData, onShowActionDelete }: MemberTab
   }
 
   return (
-    <Table head={columns} data={formatedData} className="border mt-7" />
+    <div className="w-full overflow-x-auto pb-3">
+      <Table head={columns} data={formatedData} className="border mt-7" />
+    </div>
   )
 }
 export default MemberTable

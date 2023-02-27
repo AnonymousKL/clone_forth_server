@@ -6,7 +6,7 @@ const Menu = () => {
   const itemBaseClass = 'rounded-t-5 px-4 py-3 w-[110px] transition text-white text-center inline-flex justify-center items-center '
 
   return (
-    <ul className="flex">
+    <ul className="hidden lg:flex">
       {menus.map((menu, i) => (
         <li key={i}>
           <NavLink

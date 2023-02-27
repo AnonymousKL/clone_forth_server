@@ -18,7 +18,7 @@ function App() {
 
         {/* Private routes */}
         <Route element={<RequireAuth />}>
-          <Route path="" element={<Dashboard />} />
+          <Route path="" element={<Projects />} />
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="projects/create" element={<Create />} />

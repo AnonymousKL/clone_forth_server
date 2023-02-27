@@ -4,7 +4,7 @@ const MainLayout = ({ children }: any) => {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="px-14 py-6">
+      <div className="p-4 sm:p-6 md:px-14 md:py-6">
         {children}
       </div>
     </div>

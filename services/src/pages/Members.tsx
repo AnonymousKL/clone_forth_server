@@ -69,10 +69,10 @@ const Members = () => {
         onShowActionDelete={onShowActionDelete}
       />
       <button
-        className="fixed bottom-12 right-12"
+        className="fixed bottom-4 right-4 md:bottom-8 lg:bottom-12 md:right-8 lg:right-12"
         onClick={() => navigate('/members/create')}
       >
-        <AddIcon className="w-14 h-14" />
+        <AddIcon className="w-10 h-10 md:w-12 lg:w-14 md:h-12 lg:h-14" />
       </button>
       {isShowModal && (
         <Modal

@@ -130,7 +130,9 @@ const ProjectTable = ({ refetchProject, formData, onShowActionDelete }: ProjectT
   }
 
   return (
-    <Table head={columns} data={formatedData} className="border mt-7" />
+    <div className="w-full overflow-x-auto pb-3">
+      <Table head={columns} data={formatedData} className="border mt-7" />
+    </div>
   )
 }
 export default ProjectTable
