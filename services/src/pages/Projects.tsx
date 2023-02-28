@@ -4,15 +4,14 @@ import { notification } from "antd"
 import { deleteProject } from "services/api"
 import { statusOptions } from "utils/constant"
 import { useDebounce } from "hooks/useDebounce"
+import { _confirm } from "components/PromiseModal"
 import Search from "components/Search"
-import Modal from "components/Modal"
 import AddIcon from "components/svg-icon/AddIcon"
 import Select from "components/Select"
 import ProjectTable from "page-components/ProjectTable"
+import ModelNew from "components/ModelNew"
 
 const Projects = () => {
-  const [isShowModal, setShowModal] = useState(false)
-  const [projectIdInModal, setProjectIdInModal] = useState(null)
   const [refetchProject, setRefetchProject] = useState(false)
   const [keyword, setKeyword] = useState('')
   const [formData, setFormData] = useState({
@@ -23,14 +22,24 @@ const Projects = () => {
 
   const navigate = useNavigate()
 
-  const onShowActionDelete = (id: any) => {
-    setShowModal(true)
-    setProjectIdInModal(id)
+  const onShowActionDelete = async (id: any) => {
+    const confirmed = await _confirm.delete({
+      Template: ModelNew, props: {
+        actionButton: true,
+        title: "Delete Project",
+        children: (
+          <div className="bg-white px-8 py-4">
+            <p>Delete Project? This Action Cannot Be Undo!</p>
+          </div>
+        )
+      }
+    })
+    if (!confirmed) { return }
+    onDeleteProject(id)
   }
 
-  const onDeleteProject = async () => {
-    setShowModal(false)
-    const res = await deleteProject(projectIdInModal)
+  const onDeleteProject = async (id: number) => {
+    const res = await deleteProject(id)
     if (res.status === 'success') {
       notification.open({
         type: 'success',
@@ -74,23 +83,6 @@ const Projects = () => {
       >
         <AddIcon className="w-14 h-14" />
       </button>
-      {isShowModal && (
-        <Modal
-          actionButton
-          title="Delete Project"
-          isShow={isShowModal}
-          onClose={() => setShowModal(false)}
-          onCancel={() => {
-            setShowModal(false)
-            setProjectIdInModal(null)
-          }}
-          onAccept={onDeleteProject}
-        >
-          <div className="bg-white px-8 py-4">
-            <p>Delete Project? This Action Cannot Be Undo!</p>
-          </div>
-        </Modal>
-      )}
     </div>
   )
 }

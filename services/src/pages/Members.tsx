@@ -4,15 +4,14 @@ import { notification } from "antd"
 import { deleteMember } from "services/api"
 import { teamOptions } from "utils/constant"
 import { useDebounce } from "hooks/useDebounce"
+import { _confirm } from "components/PromiseModal"
 import Search from "components/Search"
-import Modal from "components/Modal"
 import AddIcon from "components/svg-icon/AddIcon"
 import Select from "components/Select"
 import MemberTable from "page-components/MemberTable"
+import ModelNew from "components/ModelNew"
 
 const Members = () => {
-  const [isShowModal, setShowModal] = useState(false)
-  const [memberIdInModel, setMemberIdInModel] = useState(null)
   const [refetchProject, setRefetchProject] = useState(false)
   const [keyword, setKeyword] = useState('')
   const [formData, setFormData] = useState({
@@ -23,14 +22,24 @@ const Members = () => {
 
   const navigate = useNavigate()
 
-  const onShowActionDelete = (id: any) => {
-    setShowModal(true)
-    setMemberIdInModel(id)
+  const onShowActionDelete = async (id: any) => {
+    const confirmed = await _confirm.delete({
+      Template: ModelNew, props: {
+        actionButton: true,
+        title: "Delete Member",
+        children: (
+          <div className="bg-white px-8 py-4">
+            <p>Delete Member? This Action Cannot Be Undo!</p>
+          </div>
+        )
+      }
+    })
+    if (!confirmed) { return }
+    onDeleteProject(id)
   }
 
-  const onDeleteProject = async () => {
-    setShowModal(false)
-    const res = await deleteMember(memberIdInModel)
+  const onDeleteProject = async (id: number) => {
+    const res = await deleteMember(id)
     if (res.status === 'success') {
       notification.open({
         type: 'success',
@@ -74,23 +83,6 @@ const Members = () => {
       >
         <AddIcon className="w-10 h-10 md:w-12 lg:w-14 md:h-12 lg:h-14" />
       </button>
-      {isShowModal && (
-        <Modal
-          actionButton
-          title="Delete Member"
-          isShow={isShowModal}
-          onClose={() => setShowModal(false)}
-          onCancel={() => {
-            setShowModal(false)
-            setMemberIdInModel(null)
-          }}
-          onAccept={onDeleteProject}
-        >
-          <div className="bg-white px-8 py-4">
-            <p>Delete Member? This Action Cannot Be Undo!</p>
-          </div>
-        </Modal>
-      )}
     </div>
   )
 }

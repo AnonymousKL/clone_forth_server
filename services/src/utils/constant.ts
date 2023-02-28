@@ -1,8 +1,8 @@
 export const menus = [
-  {
-    title: 'Dashboard',
-    link: '/',
-  },
+  // {
+  //   title: 'Dashboard',
+  //   link: '/',
+  // },
   {
     title: 'Projects',
     link: '/projects',
