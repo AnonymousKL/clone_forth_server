@@ -64,10 +64,11 @@ const Projects = () => {
       <div className="mt-7 w-1/2 grid grid-cols-2 gap-3">
         <Search
           iconPosition="right"
-          inputClassName="h-full pl-2 border-[2.5px] border-gray-4"
+          inputClassName="h-full pl-2 border border-gray-3"
           onChange={(e) => setKeyword(e.target.value)}
         />
         <Select
+          customWidth
           options={statusOptions}
           onSelect={(option) => setFormData((prev) => ({ ...prev, status: option.value }))}
         />

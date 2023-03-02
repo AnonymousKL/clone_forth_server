@@ -1,10 +1,10 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import RequireAuth from 'components/RequireAuth';
 import Error from 'pages/404';
-import Login from 'pages/Login';
+// import Login from 'pages/Login';
 import Projects from 'pages/Projects';
 import Create from 'pages/projects/Create';
-import Dashboard from 'pages/Dashboard';
+// import Dashboard from 'pages/Dashboard';
 import Members from 'pages/Members';
 import CreateMember from 'pages/members/Create';
 import MemberDetail from 'pages/members/Detail';
@@ -18,7 +18,7 @@ function App() {
 
         {/* Private routes */}
         <Route element={<RequireAuth />}>
-          <Route path="" element={<Projects />} />
+          <Route path="" element={<Navigate to="/projects" replace />} />
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="projects/create" element={<Create />} />
@@ -31,9 +31,7 @@ function App() {
         </Route>
 
         {/* Public routes */}
-        {/* <Route element={<NoAuth />}> */}
         <Route path="login" element={<NoAuth />} />
-        {/* </Route> */}
         <Route path="*" element={<Error />} />
 
       </Routes>

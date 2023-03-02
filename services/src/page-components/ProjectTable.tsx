@@ -91,7 +91,7 @@ const ProjectTable = ({ refetchProject, formData, onShowActionDelete }: ProjectT
       title: 'Priority',
       key: 'Priority',
       render: ({ priority }: any) => (
-        <p className={`text-pri-${priority.toLowerCase()}`}>{priority}</p>
+        <p className={`text-pri-${priority.toLowerCase()} text-center`}>{priority}</p>
       )
     },
     {
