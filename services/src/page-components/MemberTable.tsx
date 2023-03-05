@@ -7,6 +7,7 @@ import DeleteIcon from "components/svg-icon/DeleteIcon"
 import EditIcon from "components/svg-icon/EditIcon"
 import SpinnerIcon from "components/svg-icon/SpinnerIcon"
 import Table from "components/Table"
+import { formatCurrency } from "utils/format"
 
 type MemberTableProps = {
   refetchProject: boolean,
@@ -25,7 +26,7 @@ const formatMembersData = (data: any) => {
     Email: item.Email,
     Role: item?.Roles[0]?.Name,
     StartDate: formatTime(item.StartDate),
-    Cost: item.Salary,
+    Cost: formatCurrency(item.Salary),
     Participating: '',
     WorkModel: workModel[item.WorkModel as keyof Object],
     Action: {
