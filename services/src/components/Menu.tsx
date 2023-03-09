@@ -3,7 +3,7 @@ import { ReactComponent as DropdownIcon } from "assets/icon/dropdown.svg"
 import { menus } from "utils/constant"
 
 const Menu = () => {
-  const itemBaseClass = 'rounded-t-5 px-4 py-3 w-[110px] transition text-white text-center inline-flex justify-center items-center '
+  const itemBaseClass = 'rounded-t-5 px-4 py-3 w-[110px] truncate transition text-white text-center inline-flex justify-center items-center '
 
   return (
     <ul className="hidden lg:flex">

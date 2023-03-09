@@ -5,11 +5,12 @@ type Props = {
   className?: string,
   inputClassName?: string,
   iconPosition?: 'left' | 'right',
+  placeholder?: string,
   onChange?: (e: any) => void,
 }
 
 const Search = (props: Props) => {
-  const { className, iconPosition = 'left', inputClassName, onChange } = props
+  const { className, iconPosition = 'left', inputClassName, placeholder, onChange } = props
   const positionClass = {
     left: 'left-2',
     right: 'right-2',
@@ -20,6 +21,7 @@ const Search = (props: Props) => {
       <input
         className={clsx('pl-8 w-full rounded-5 border border-gray-300 outline-none', inputClassName)}
         onChange={onChange}
+        placeholder={placeholder}
       />
       <div className={clsx('absolute top-1/2 -translate-y-1/2', positionClass[iconPosition])}>
         <SearchIcon />

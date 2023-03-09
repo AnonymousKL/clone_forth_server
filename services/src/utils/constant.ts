@@ -18,6 +18,10 @@ export const menus = [
     }
   },
   {
+    title: 'Time Sheet',
+    link: '/timesheet',
+  },
+  {
     title: 'Sales',
     link: '/sales',
   },

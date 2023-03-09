@@ -9,6 +9,7 @@ import Members from 'pages/Members';
 import CreateMember from 'pages/members/Create';
 import MemberDetail from 'pages/members/Detail';
 import ProjectDetail from 'pages/projects/Detail';
+import TimeSheet from 'pages/TimeSheet';
 import NoAuth from 'components/NoAuth';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="members" element={<Members />} />
           <Route path="members/:id" element={<MemberDetail />} />
           <Route path="members/create" element={<CreateMember />} />
+          <Route path="timesheet" element={<TimeSheet />} />
           <Route path="sales" element={<div>Sales</div>} />
           <Route path="contract" element={<div>Contract</div>} />
           <Route path="cashflow" element={<div>Cash Flow</div>} />
