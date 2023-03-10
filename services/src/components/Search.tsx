@@ -4,13 +4,14 @@ import SearchIcon from 'components/svg-icon/SearchIcon'
 type Props = {
   className?: string,
   inputClassName?: string,
+  showIcon?: boolean,
   iconPosition?: 'left' | 'right',
   placeholder?: string,
   onChange?: (e: any) => void,
 }
 
 const Search = (props: Props) => {
-  const { className, iconPosition = 'left', inputClassName, placeholder, onChange } = props
+  const { className, showIcon = true, iconPosition = 'left', inputClassName, placeholder, onChange } = props
   const positionClass = {
     left: 'left-2',
     right: 'right-2',
@@ -23,9 +24,11 @@ const Search = (props: Props) => {
         onChange={onChange}
         placeholder={placeholder}
       />
-      <div className={clsx('absolute top-1/2 -translate-y-1/2', positionClass[iconPosition])}>
-        <SearchIcon />
-      </div>
+      {showIcon && (
+        <div className={clsx('absolute top-1/2 -translate-y-1/2', positionClass[iconPosition])}>
+          <SearchIcon />
+        </div>
+      )}
     </div>
   )
 }

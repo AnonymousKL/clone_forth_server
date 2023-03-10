@@ -290,8 +290,7 @@ const TimeSheetTable = ({ refetchProject, formData, onShowActionDelete }: Projec
       key: 'Action',
       render: ({ id }: any) => (
         <>
-          <button className="inline-block mr-2"><EditIcon /></button>
-          <button onClick={() => onShowActionDelete(id)}><DeleteIcon /></button>
+          <button className="px-2" onClick={() => onShowActionDelete(id)}><DeleteIcon /></button>
         </>
       )
     },
@@ -303,10 +302,7 @@ const TimeSheetTable = ({ refetchProject, formData, onShowActionDelete }: Projec
         <Table head={columns} data={timeSheetData} className="border mt-7" />
       </div>
       <div className="flex flex-col sm:flex-row justify-between gap-4 mt-5">
-        <div className="flex gap-4">
-          <Button type="submit" variant="dark" className="h-fit">Save Timesheet</Button>
-          <Button type="submit" variant="dark" className="h-fit">Export to Excel</Button>
-        </div>
+        <Button type="submit" variant="dark" className="h-fit">Save Timesheet</Button>
         <div>
           <div className="grid grid-cols-2 gap-4 p-2 border-b">
             <p className="font-semibold">Total Billable</p>
