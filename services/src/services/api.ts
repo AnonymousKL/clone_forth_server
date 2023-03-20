@@ -67,3 +67,20 @@ export async function fetchTeams() {
   const res = await axiosInstance.get(apiUrl + '/teams').then(res => res.data)
   return res
 }
+
+export async function fetchTimesheets(params?: { project_name: string, from_date: string }) {
+  const formatedParams = removeEmptyProps(params)
+  const res = await axiosInstance.get(apiUrl + '/timesheet', { params: formatedParams }).then(res => res.data)
+  return res
+}
+
+export async function createTimesheets(data: any) {
+  const res = await axiosInstance.post(apiUrl + '/timesheet/create_multiple', data).then(res => res.data)
+  return res
+}
+
+export async function deleteTimesheet(id: number) {
+  const res = await axiosInstance.delete(apiUrl + `/timesheet/${id}`).then(res => res.data)
+  return res
+}
+

@@ -6,12 +6,13 @@ type ButtonProps = {
   variant?: 'light' | 'dark' | 'red',
   size?: 'sm' | 'md' | 'lg',
   className?: string,
+  disabled?: boolean,
   children?: ReactNode,
   onClick?: (e: any) => void,
 }
 
 const Button = (props: ButtonProps) => {
-  const { variant = 'light', size = 'md', type = 'button', className, children, onClick } = props
+  const { variant = 'light', size = 'md', type = 'button', className, children, disabled = false, onClick } = props
 
   const variantClass = {
     light: 'bg-gray-3 hover:bg-gray-3/80',
@@ -27,9 +28,16 @@ const Button = (props: ButtonProps) => {
 
   return (
     <button
-      className={clsx('rounded-5 transition-colors', variantClass[variant], sizeClass[size], className)}
+      className={clsx(
+        'rounded-5 transition-colors',
+        variantClass[variant],
+        sizeClass[size],
+        disabled ? 'cursor-not-allowed bg-primary-1/80' : 'cursor-pointer',
+        className
+      )}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {children}
     </button>

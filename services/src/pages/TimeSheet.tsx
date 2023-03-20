@@ -1,14 +1,25 @@
 import dayjs from 'dayjs'
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { DatePicker, notification } from "antd"
-import { deleteProject } from "services/api"
-import { statusOptions } from "utils/constant"
 import { useDebounce } from "hooks/useDebounce"
 import { _confirm } from "components/PromiseModal"
 import Search from "components/Search"
 import TimeSheetTable from "page-components/TimeSheetTable"
 import Button from "components/Button"
+
+const { RangePicker } = DatePicker;
+
+const MAX_DAY_RANGE = 10
+
+const validateRange = (dateRange: [string, string]): number | false => {
+  const fromDateTimestamp = new Date(dateRange[0]).getTime()
+  const toDateTimestamp = new Date(dateRange[1]).getTime()
+  const dayRange = (toDateTimestamp - fromDateTimestamp) / 1000 / 3600 / 24
+  if (dayRange > MAX_DAY_RANGE) {
+    return false
+  }
+  return dayRange
+}
 
 const TimeSheet = () => {
   const [keyword, setKeyword] = useState('')
@@ -16,8 +27,18 @@ const TimeSheet = () => {
     keyword: '',
     status: ''
   })
-  const [startDate, setStartDate] = useState<string | undefined>('')
+  const [dateRange, setDateRange] = useState<any>([Date()])
   const debouncedKeyword = useDebounce(keyword, 1000)
+
+  const onChangeDateRange = (values: any, formatString: [string, string]) => {
+    if (!validateRange(formatString)) {
+      notification.open({
+        type: 'error',
+        message: `Date range must be within ${MAX_DAY_RANGE} day`,
+      })
+    }
+    setDateRange(formatString)
+  }
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, keyword: debouncedKeyword }))
@@ -34,18 +55,17 @@ const TimeSheet = () => {
             inputClassName="h-full pl-2 border border-gray-3"
             onChange={(e) => setKeyword(e.target.value)}
           />
-          <DatePicker
-            defaultValue={dayjs(Date())}
+          <RangePicker
             className="rounded-5 border-gray-3 py-1.5 leading-6"
-            onChange={(date) => setStartDate(date?.toISOString())}
+            defaultValue={[dayjs(Date()), dayjs(Date())]}
+            onChange={onChangeDateRange}
           />
         </div>
         <Button type="submit" variant="dark" className="h-fit self-end">Export to Excel</Button>
       </div>
       <TimeSheetTable
-        refetchProject={false}
         formData={formData}
-        onShowActionDelete={() => { }}
+        dateRangeProp={dateRange}
       />
     </div>
   )
