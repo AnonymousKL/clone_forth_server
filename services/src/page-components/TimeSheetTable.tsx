@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { InputNumber, notification } from "antd"
 import { createTimesheets, deleteTimesheet, fetchTimesheets } from "services/api"
+import { formatDate, formatTime, incrementDate } from "utils/time"
 import { _confirm } from "components/PromiseModal"
 import DeleteIcon from "components/svg-icon/DeleteIcon"
 import Table from "components/Table"
@@ -9,7 +10,7 @@ import Button from "components/Button"
 import ModelNew from "components/ModelNew"
 
 type TimesheetTableProps = {
-  formData?: any,
+  projectFilterId: number | null,
   dateRangeProp: [string],
 }
 
@@ -32,9 +33,13 @@ type formated = {
   StartDate: string,
 }
 
-function formatTimeSheet(data: any[], fromDate: Date, range: number) {
+function formatTimeSheet(data: any[], fromDate: Date, range: number, projectId: number | null) {
   let formated: formated[] = []
   data.forEach((item, i) => {
+    if (projectId && projectId !== item.Project.ID) {
+      console.log('DFR')
+      return
+    }
     let segments: any = {}
     for (let j = 0; j < range; j++) {
       const dateString = incrementDate(fromDate, j).toLocaleDateString()
@@ -49,7 +54,7 @@ function formatTimeSheet(data: any[], fromDate: Date, range: number) {
     }
 
     let dt = {
-      ID: i,
+      ID: i + 1,
       Project: {
         id: item.Project.ID,
         name: item.Project.Name,
@@ -59,18 +64,12 @@ function formatTimeSheet(data: any[], fromDate: Date, range: number) {
         name: item.Member.Name,
       },
       Role: "",
-      StartDate: "2022/02/02",
+      StartDate: (item.DayLog.Date).split('T')[0],
     }
     let mergedObj = Object.assign(dt, segments, { Action: { id: item.ID } })
     formated.push(mergedObj)
   })
   return formated
-}
-
-function incrementDate(dateInput: Date, increment: number) {
-  const dateFormatTotime = new Date(dateInput)
-  const increasedDate = new Date(dateFormatTotime.getTime() + (increment * 86400000))
-  return increasedDate
 }
 
 function _createDateRange(fromDate: Date, range: number) {
@@ -84,38 +83,7 @@ function _createDateRange(fromDate: Date, range: number) {
   return dateRange
 }
 
-const onDeleteTimesheet = async (id: number) => {
-  const res = await deleteTimesheet(id)
-  if (res.status === 'success') {
-    notification.open({
-      type: 'success',
-      message: 'Delete member successful',
-    })
-  } else {
-    notification.open({
-      type: 'error',
-      message: 'Cannot delete member',
-    })
-  }
-}
-
-async function onShowActionDelete(id: any) {
-  const confirmed = await _confirm.delete({
-    Template: ModelNew, props: {
-      actionButton: true,
-      title: "Delete timesheet",
-      children: (
-        <div className="bg-white px-8 py-4">
-          <p>Delete timesheet? This Action Cannot Be Undo!</p>
-        </div>
-      )
-    }
-  })
-  if (!confirmed) { return }
-  onDeleteTimesheet(id)
-}
-
-const TimeSheetTable = ({ dateRangeProp }: TimesheetTableProps) => {
+const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps) => {
   const [refetchTimesheet, setRefetchTimesheet] = useState(false)
   const [tsData, setTsData] = useState<any>([])
   const [formTimesheetData, setFormTimesheetData] = useState<any>([])
@@ -124,7 +92,7 @@ const TimeSheetTable = ({ dateRangeProp }: TimesheetTableProps) => {
 
   const onChangeHours = (hours: number | null, date: string, timesheetId: number) => {
     setFormTimesheetData((timesheetPrev: any[]) => {
-      let convertedDateString = new Date(date).toISOString()
+      let convertedDateString = formatDate(date).date.toISOString()
       const foundTsIndex = timesheetPrev.findIndex((sheet) => sheet?.TimesheetId == timesheetId)
 
       if (foundTsIndex != -1) {
@@ -158,6 +126,38 @@ const TimeSheetTable = ({ dateRangeProp }: TimesheetTableProps) => {
       notification.open({
         type: 'error',
         message: 'Cannot save timesheet',
+      })
+    }
+    setRefetchTimesheet(!refetchTimesheet)
+  }
+
+  const onShowActionDelete = async (id: any) => {
+    const confirmed = await _confirm.delete({
+      Template: ModelNew, props: {
+        actionButton: true,
+        title: "Delete timesheet",
+        children: (
+          <div className="bg-white px-8 py-4">
+            <p>Delete timesheet? This Action Cannot Be Undo!</p>
+          </div>
+        )
+      }
+    })
+    if (!confirmed) { return }
+    onDeleteTimesheet(id)
+  }
+
+  const onDeleteTimesheet = async (id: number) => {
+    const res = await deleteTimesheet(id)
+    if (res.status === 'success') {
+      notification.open({
+        type: 'success',
+        message: 'Delete member successful',
+      })
+    } else {
+      notification.open({
+        type: 'error',
+        message: 'Cannot delete member',
       })
     }
     setRefetchTimesheet(!refetchTimesheet)
@@ -313,16 +313,16 @@ const TimeSheetTable = ({ dateRangeProp }: TimesheetTableProps) => {
   useEffect(() => {
     const fetchTimesheet = async () => {
       const res = await fetchTimesheets()
-      const fmtData = formatTimeSheet(res.data, fromDate, 7)
+      const fmtData = formatTimeSheet(res.data, fromDate, 7, projectFilterId)
       setTsData(fmtData)
     }
     fetchTimesheet()
-  }, [refetchTimesheet])
+  }, [refetchTimesheet, dateRangeProp, projectFilterId])
 
   return (
     <div>
       <div className="w-full overflow-x-auto pb-3">
-        {tsData.length && (
+        {tsData.length !== 0 && (
           <Table head={columns} data={tsData} className="border mt-7" />
         )}
       </div>

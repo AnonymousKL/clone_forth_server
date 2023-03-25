@@ -11,7 +11,7 @@ export const apiEndpoint = {
   GET_PROJECTS: '/projects',
 }
 
-export async function fetchProjects(params: { keyword: string, status: string }) {
+export async function fetchProjects(params?: { keyword: string, status: string }) {
   const formatedParams = removeEmptyProps(params)
   const res = await axiosInstance.get(apiUrl + '/projects', { params: formatedParams }).then(res => res.data)
   return res.data
