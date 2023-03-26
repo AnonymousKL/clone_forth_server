@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useEffect, useState } from "react"
 import { DatePicker, notification, Select } from "antd"
-import { fetchProjects } from 'services/api'
+import { exportExcel, fetchProjects } from 'services/api'
 import { incrementDate } from 'utils/time'
 import { _confirm } from "components/PromiseModal"
 import TimeSheetTable from "page-components/TimeSheetTable"
@@ -41,6 +41,26 @@ const TimeSheet = () => {
     setDateRange(formatString)
   }
 
+  const onExportExcel = () => {
+    fetch("https://forth-server.onrender.com/api/v1/timesheet/export_excel")
+      .then(res => res.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(
+          new Blob([blob]),
+        );
+        const link = document.createElement('a')
+        link.href = url;
+        link.setAttribute(
+          'download',
+          `Timesheet.xlsx`,
+        );
+
+        document.body.appendChild(link)
+        link.click()
+        link.parentNode?.removeChild(link)
+      })
+  }
+
   useEffect(() => {
     const fetchProjectList = async () => {
       const projects = await fetchProjects()
@@ -67,7 +87,12 @@ const TimeSheet = () => {
             onChange={onChangeDateRange}
           />
         </div>
-        <Button type="submit" variant="dark" className="h-fit self-end">Export to Excel</Button>
+        <Button
+          type="button"
+          variant="dark"
+          className="h-fit self-end"
+          onClick={onExportExcel}
+        >Export to Excel</Button>
       </div>
       <TimeSheetTable
         projectFilterId={projectFilterId}

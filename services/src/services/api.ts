@@ -84,3 +84,7 @@ export async function deleteTimesheet(id: number) {
   return res
 }
 
+export async function exportExcel() {
+  const res = await axiosInstance.get(apiUrl + '/timesheet/export_excel')
+  return res
+}
