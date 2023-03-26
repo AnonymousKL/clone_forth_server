@@ -1,14 +1,21 @@
 package timesheet
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
+	"time"
 
 	"http-server/internal/appctx"
 	"http-server/internal/models"
 	"http-server/internal/services/timesheet"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xuri/excelize/v2"
+	"gorm.io/datatypes"
 )
 
 type timesheetHandler struct {
@@ -137,4 +144,66 @@ func (th *timesheetHandler) GetById(ctx *gin.Context) {
 	timesheetId, _ := strconv.Atoi(ctx.Param("id"))
 	timesheet, _ := th.timesheetService.GetById(timesheetId)
 	ctx.JSON(http.StatusOK, gin.H{"data": timesheet})
+}
+
+func (th *timesheetHandler) ExportExcel(ctx *gin.Context) {
+	from, _ := ctx.GetQuery("from")
+	timeSheets := th.timesheetService.GetAll(from)
+	curTime := time.Now()
+
+	f := excelize.NewFile()
+	defer func() {
+		if err := f.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
+	_, err := f.NewSheet("Sheet1")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	f.SetCellValue("Sheet1", "A1", "Project")
+	f.SetCellValue("Sheet1", "B1", "Member")
+	f.SetCellValue("Sheet1", "C1", "StartDate")
+	f.SetCellValue("Sheet1", "D1", fmt.Sprintf("%d/%d/%d", curTime.Year(), curTime.Month(), curTime.Day()))
+
+	style, _ := f.NewStyle(&excelize.Style{
+		Font: &excelize.Font{Bold: true},
+		Alignment: &excelize.Alignment{
+			Horizontal: "center",
+			Vertical:   "center",
+		},
+	})
+	f.SetRowStyle("Sheet1", 1, 1, style)
+
+	for i, timeSheet := range timeSheets {
+		startDateBytes, _ := datatypes.Date(timeSheet.DayLog.Date).MarshalJSON()
+		f.SetCellValue("Sheet1", fmt.Sprintf("A%d", i+2), timeSheet.Project.Name)
+		f.SetCellValue("Sheet1", fmt.Sprintf("B%d", i+2), timeSheet.Member.Name)
+		f.SetCellValue("Sheet1", fmt.Sprintf("C%d", i+2), string(startDateBytes))
+		f.SetCellValue("Sheet1", fmt.Sprintf("D%d", i+2), i)
+	}
+
+	// Create storage dir if not exist
+	if _, err := os.Stat("storage"); err != nil {
+		err := os.Mkdir("storage", os.ModePerm)
+		if err != nil {
+			log.Println(err.Error())
+		}
+	}
+
+	todayDateString := fmt.Sprintf("%d-%d-%d", curTime.Year(), curTime.Month(), curTime.Day())
+	fileName := fmt.Sprintf("Timesheet%s.xlsx", todayDateString)
+	savePath := fmt.Sprintf("storage/Timesheet%s.xlsx", todayDateString)
+	if err := f.SaveAs(savePath); err != nil {
+		log.Println("Save Err: ", err)
+	}
+
+	path, err := filepath.Abs(savePath)
+	if err != nil {
+		log.Println("Get filepath error: ", err)
+	}
+	ctx.FileAttachment(path, fileName)
 }

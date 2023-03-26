@@ -49,4 +49,5 @@ func Register(appCtx *appctx.AppCtx, engine *gin.Engine) {
 	timesheetRoutes.POST("/:id/create_segment", timesheetHandler.SaveSegment)
 	timesheetRoutes.POST("/create_multiple", timesheetHandler.SaveMultipleTsSegment)
 	timesheetRoutes.DELETE("/:id", timesheetHandler.Delete)
+	timesheetRoutes.GET("/export_excel", timesheetHandler.ExportExcel)
 }
