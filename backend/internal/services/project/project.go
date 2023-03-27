@@ -13,6 +13,7 @@ import (
 type IProjectService interface {
 	GetAll(ctx *gin.Context) ([]models.Project, error)
 	GetByIdOrName(idOrName interface{}) (models.Project, error)
+	GetList() ([]models.ProjectListResponse, error)
 	Create(payload *models.CreateProjectRequest) (models.Project, error)
 	Update(id int, payload *models.CreateProjectRequest, ctx *gin.Context) (models.Project, error)
 	Delete(id int) error
@@ -100,6 +101,13 @@ func (ps *ProjectService) GetByIdOrName(id interface{}) (models.Project, error) 
 	}
 
 	return project, queryErr
+}
+
+func (ps *ProjectService) GetList() ([]models.ProjectListResponse, error) {
+	var projects []models.Project
+	var projectResponse []models.ProjectListResponse
+	res := ps.DB.Model(&projects).Select("name", "id").Find(&projectResponse).Error
+	return projectResponse, res
 }
 
 func (ps *ProjectService) Update(id int, payload *models.CreateProjectRequest, ctx *gin.Context) (models.Project, error) {

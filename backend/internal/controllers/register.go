@@ -28,6 +28,7 @@ func Register(appCtx *appctx.AppCtx, engine *gin.Engine) {
 	projectRoutes := routes.Group("/projects")
 	projectRoutes.GET("", projectHandler.RetrieveProject)
 	projectRoutes.GET("/:id", projectHandler.GetProjectByIdOrName)
+	projectRoutes.GET("/list", projectHandler.GetProjectList)
 	projectRoutes.POST("", projectHandler.CreateProject)
 	projectRoutes.PUT("/:id", projectHandler.UpdateProject)
 	projectRoutes.DELETE("/:id", projectHandler.DeleteProject)

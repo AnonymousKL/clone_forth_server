@@ -30,13 +30,6 @@ type Project struct {
 	EndDate        time.Time `gorm:"default:NULL"`
 }
 
-type ProjectResponse struct {
-	Name        string `json:"Name" binding:"required"`
-	Description string `json:"Description"`
-	StatusID    uint   `json:"StatusID,omitempty"`
-	Priority    string `json:"Priority,omitempty"`
-}
-
 type CreateProjectRequest struct {
 	Name           string `json:"Name" binding:"required"`
 	Description    string `json:"Description"`
@@ -49,4 +42,25 @@ type CreateProjectRequest struct {
 	ActualReceived float32   `json:"ActualReceived"`
 	StartDate      time.Time `json:"StartDate"`
 	EndDate        time.Time `json:"EndDate"`
+}
+
+type ProjectResponse struct {
+	ID             uint
+	Name           string
+	Description    string
+	StatusID       uint
+	Priority       string
+	Health         Health
+	Members        []*Member
+	ClientName     string
+	Budget         float32
+	ActualCost     float32
+	ActualReceived float32
+	StartDate      time.Time
+	EndDate        time.Time
+}
+
+type ProjectListResponse struct {
+	Name string
+	ID   uint
 }

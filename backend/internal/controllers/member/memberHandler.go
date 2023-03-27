@@ -1,25 +1,31 @@
 package member
 
 import (
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"http-server/internal/appctx"
 	"http-server/internal/models"
 	"http-server/internal/services/member"
+	"http-server/internal/services/timesheet"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/datatypes"
 )
 
 type memberHandler struct {
-	appctx        *appctx.AppCtx
-	memberService member.IMemberService
+	appctx           *appctx.AppCtx
+	memberService    member.IMemberService
+	timesheetService timesheet.ITimeSheet
 }
 
 func NewMemberHandler(appCtx *appctx.AppCtx) memberHandler {
 	return memberHandler{
-		appctx:        appCtx,
-		memberService: appCtx.GetMemberService(),
+		appctx:           appCtx,
+		memberService:    appCtx.GetMemberService(),
+		timesheetService: appCtx.GetTimesheetService(),
 	}
 }
 
@@ -68,6 +74,7 @@ func (mh *memberHandler) CreateMember(ctx *gin.Context) {
 
 func (mh *memberHandler) UpdateMember(ctx *gin.Context) {
 	id := ctx.Param("id")
+	idInt, _ := strconv.Atoi(id)
 	var payload *models.CreateMemberRequest
 
 	if err := ctx.ShouldBind(&payload); err != nil {
@@ -90,6 +97,22 @@ func (mh *memberHandler) UpdateMember(ctx *gin.Context) {
 
 	mh.memberService.AssignRolesToMember(memberId, payload.Roles)
 	mh.memberService.AssignProjectsToMember(memberId, payload.Projects)
+
+	// Create timesheet for each project-member
+	if len(payload.Projects) != 0 {
+		for _, projectId := range payload.Projects {
+			timesheet := models.TimeSheet{
+				MemberID:  idInt,
+				ProjectID: int(projectId),
+				DayLog: models.DayLog{
+					Date: datatypes.Date(time.Now()),
+				},
+			}
+			if err := mh.timesheetService.Create(timesheet); err != nil {
+				log.Println("Cannot create timesheet for project")
+			}
+		}
+	}
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "success",

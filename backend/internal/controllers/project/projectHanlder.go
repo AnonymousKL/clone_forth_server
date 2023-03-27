@@ -183,3 +183,19 @@ func (ph *projectHandler) DeleteProject(ctx *gin.Context) {
 		"message": "Deleted",
 	})
 }
+
+func (ph *projectHandler) GetProjectList(ctx *gin.Context) {
+	projects, err := ph.projectService.GetList()
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{
+			"status":  "error",
+			"message": "Cannot delete project",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"data":   projects,
+	})
+}
