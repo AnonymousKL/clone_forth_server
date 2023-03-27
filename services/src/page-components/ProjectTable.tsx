@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { fetchProjects } from "services/api"
 import { projectStatus } from "utils/constant"
 import { formatTime } from "utils/time"
+import { formatCurrency } from "utils/format"
 import Badge from "components/Badge"
 import DeleteIcon from "components/svg-icon/DeleteIcon"
 import EditIcon from "components/svg-icon/EditIcon"
@@ -28,8 +29,9 @@ const formatProjectsData = (data: any) => {
     StartDate: formatTime(item.StartDate),
     EndDate: formatTime(item.EndDate),
     Participants: item.Members?.length,
+    ActualCost: formatCurrency(2300),
     Health: item.Health.Health,
-    HealthReason: item.Health.HealthReason,
+    // HealthReason: item.Health.HealthReason,
     Priority: {
       priority: item.Priority
     },
@@ -80,13 +82,17 @@ const ProjectTable = ({ refetchProject, formData, onShowActionDelete }: ProjectT
       key: 'Participants',
     },
     {
+      title: 'Actual Cost',
+      key: 'ActualCost',
+    },
+    {
       title: 'Health',
       key: 'Health',
     },
-    {
-      title: 'Health Reason',
-      key: 'HealthReason',
-    },
+    // {
+    //   title: 'Health Reason',
+    //   key: 'HealthReason',
+    // },
     {
       title: 'Priority',
       key: 'Priority',

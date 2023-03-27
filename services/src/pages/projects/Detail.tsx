@@ -101,7 +101,7 @@ const ProjectDetail = () => {
               className="w-full px-2 py-1 mt-10p rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition"
             ></textarea>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label htmlFor="Description">Budget<span className="text-red-1">*</span></label>
               <InputNumber
@@ -122,6 +122,16 @@ const ProjectDetail = () => {
                 parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 onChange={(value) => setValue("ActualReceived", value)}
                 required
+              />
+            </div>
+            <div>
+              <label htmlFor="ActualReceived">Actual Cost</label>
+              <InputNumber
+                className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
+                defaultValue={data.ActualReceived || ''}
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                disabled
               />
             </div>
           </div>

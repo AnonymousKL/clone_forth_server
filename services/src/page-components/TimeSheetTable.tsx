@@ -4,6 +4,8 @@ import { InputNumber, notification } from "antd"
 import { createTimesheets, deleteTimesheet, fetchTimesheets } from "services/api"
 import { formatDate, formatTime, incrementDate } from "utils/time"
 import { _confirm } from "components/PromiseModal"
+import { formatCurrency } from "utils/format"
+import { PAYMENT_RATE_PER_HOUR } from "utils/constant"
 import DeleteIcon from "components/svg-icon/DeleteIcon"
 import Table from "components/Table"
 import Button from "components/Button"
@@ -33,13 +35,14 @@ type formated = {
   StartDate: string,
 }
 
-function formatTimeSheet(data: any[], fromDate: Date, range: number, projectId: number | null) {
+function _formatTimeSheet(data: any[], fromDate: Date, range: number, projectId: number | null) {
   let formated: formated[] = []
+
   data.forEach((item, i) => {
-    if (projectId && projectId !== item.Project.ID) {
-      console.log('DFR')
+    if (projectId && projectId !== item.ProjectID) {
       return
     }
+
     let segments: any = {}
     for (let j = 0; j < range; j++) {
       const dateString = incrementDate(fromDate, j).toLocaleDateString()
@@ -83,8 +86,26 @@ function _createDateRange(fromDate: Date, range: number) {
   return dateRange
 }
 
+function _parserInputHour(value: string | undefined): number {
+  if (value === undefined) return 0
+  const floatVal = parseFloat(value)
+  return floatVal < 0 ? 0 : floatVal
+}
+
+function _calcTotalHour(timesheets: any[], projectId: number | null): number {
+  const filterdTimesheets = timesheets.filter((ts) => ts.ProjectID === projectId)
+  const totalHour = filterdTimesheets.reduce((acc, curr) => {
+    const eachTimesheet = curr.TimeSheetSegment.reduce((accumulator: any, object: any) => {
+      return accumulator + object?.Hours;
+    }, 0)
+    return acc + eachTimesheet
+  }, 0)
+  return totalHour
+}
+
 const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps) => {
   const [refetchTimesheet, setRefetchTimesheet] = useState(false)
+  const [totalHour, setTotalHour] = useState(0)
   const [tsData, setTsData] = useState<any>([])
   const [formTimesheetData, setFormTimesheetData] = useState<any>([])
   const fromDate = new Date(dateRangeProp[0] || Date())
@@ -200,6 +221,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       render: ({ time, timesheetId }: any) => (
         <div className="flex justify-center">
           <InputNumber
+            parser={_parserInputHour}
             className="w-16"
             // type="number"
             disabled={time}
@@ -215,6 +237,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       render: ({ time, timesheetId }: any) => (
         <div className="flex justify-center">
           <InputNumber
+            parser={_parserInputHour}
             className="w-16"
             // type="number"
             disabled={time}
@@ -230,6 +253,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       render: ({ time, timesheetId }: any) => (
         <div className="flex justify-center">
           <InputNumber
+            parser={_parserInputHour}
             className="w-16"
             // type="number"
             disabled={time}
@@ -245,6 +269,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       render: ({ time, timesheetId }: any) => (
         <div className="flex justify-center">
           <InputNumber
+            parser={_parserInputHour}
             className="w-16"
             // type="number"
             disabled={time}
@@ -260,6 +285,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       render: ({ time, timesheetId }: any) => (
         <div className="flex justify-center">
           <InputNumber
+            parser={_parserInputHour}
             className="w-16"
             // type="number"
             disabled={time}
@@ -275,6 +301,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       render: ({ time, timesheetId }: any) => (
         <div className="flex justify-center">
           <InputNumber
+            parser={_parserInputHour}
             className="w-16"
             // type="number"
             disabled={time}
@@ -290,6 +317,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       render: ({ time, timesheetId }: any) => (
         <div className="flex justify-center">
           <InputNumber
+            parser={_parserInputHour}
             className="w-16"
             // type="number"
             disabled={time}
@@ -313,8 +341,9 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
   useEffect(() => {
     const fetchTimesheet = async () => {
       const res = await fetchTimesheets()
-      const fmtData = formatTimeSheet(res.data, fromDate, 7, projectFilterId)
-      setTsData(fmtData)
+      const formated = _formatTimeSheet(res.data, fromDate, 7, projectFilterId)
+      setTsData(formated)
+      setTotalHour(_calcTotalHour(res.data, projectFilterId))
     }
     fetchTimesheet()
   }, [refetchTimesheet, dateRangeProp, projectFilterId])
@@ -336,20 +365,18 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
         >
           Save Timesheet
         </Button>
-        <div>
-          <div className="grid grid-cols-2 gap-4 p-2 border-b">
-            <p className="font-semibold">Total Billable</p>
-            <p className="text-right">120</p>
+        {projectFilterId && (
+          <div>
+            <div className="grid grid-cols-2 gap-4 p-2 border-b">
+              <p className="font-semibold">Total Hours</p>
+              <p className="text-right">{totalHour}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4 p-2 border-b">
+              <p className="font-semibold">{`Total Price (rate ${formatCurrency(PAYMENT_RATE_PER_HOUR)}/hour)`}</p>
+              <p className="text-right">{formatCurrency(totalHour * PAYMENT_RATE_PER_HOUR)}</p>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 p-2 border-b">
-            <p className="font-semibold">Total Non-Billable</p>
-            <p className="text-right">40</p>
-          </div>
-          <div className="grid grid-cols-2 gap-4 p-2 border-b">
-            <p className="font-semibold">Total Hour</p>
-            <p className="text-right">160</p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )

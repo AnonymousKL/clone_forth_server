@@ -181,3 +181,5 @@ export enum Health {
   Strong = 'Strong',
   Weak = 'Weak'
 }
+
+export const PAYMENT_RATE_PER_HOUR = 20
