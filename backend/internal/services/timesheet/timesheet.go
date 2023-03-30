@@ -3,6 +3,7 @@ package timesheet
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"http-server/internal/models"
@@ -12,7 +13,7 @@ import (
 )
 
 type ITimeSheet interface {
-	GetAll(from string, to string) []models.TimeSheet
+	GetAll(from string, to string, projectId string) []models.TimeSheet
 	Create(models.TimeSheet) error
 	Update()
 	Delete(id int) error
@@ -46,7 +47,7 @@ func NewTimeSheetService(db *gorm.DB) ITimeSheet {
 	}
 }
 
-func (ts *TimeSheet) GetAll(from string, to string) []models.TimeSheet {
+func (ts *TimeSheet) GetAll(from string, to string, projectIdString string) []models.TimeSheet {
 	timeSheets := []models.TimeSheet{}
 	query := ts.DB.Preload("Member").Preload("Project").Preload("TimeSheetSegment")
 	if from != "" {
@@ -54,6 +55,10 @@ func (ts *TimeSheet) GetAll(from string, to string) []models.TimeSheet {
 	}
 	if to != "" {
 		query.Where("date <= ?", to)
+	}
+	if projectIdString != "" {
+		projectId, _ := strconv.Atoi(projectIdString)
+		query.Where("project_id = ?", uint(projectId))
 	}
 	query.Find(&timeSheets)
 

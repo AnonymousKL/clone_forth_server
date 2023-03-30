@@ -33,8 +33,9 @@ func NewTimesheetHandler(appCtx *appctx.AppCtx) timesheetHandler {
 func (th *timesheetHandler) GetAll(ctx *gin.Context) {
 	from, _ := ctx.GetQuery("from")
 	to, _ := ctx.GetQuery("to")
+	projectIdString, _ := ctx.GetQuery("projectId")
 
-	timeSheets := th.timesheetService.GetAll(from, to)
+	timeSheets := th.timesheetService.GetAll(from, to, projectIdString)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "success",
 		"data":   timeSheets,
@@ -178,7 +179,7 @@ func (th *timesheetHandler) GetByProjectId(ctx *gin.Context) {
 func (th *timesheetHandler) ExportExcel(ctx *gin.Context) {
 	from, _ := ctx.GetQuery("from")
 	to, _ := ctx.GetQuery("to")
-	timeSheets := th.timesheetService.GetAll(from, to)
+	timeSheets := th.timesheetService.GetAll(from, to, "")
 	curTime := time.Now()
 
 	f := excelize.NewFile()
