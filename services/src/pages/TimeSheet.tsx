@@ -1,15 +1,17 @@
 import dayjs from 'dayjs'
 import { useEffect, useState } from "react"
 import { DatePicker, notification, Select } from "antd"
-import { exportExcel, fetchProjects } from 'services/api'
+import { apiUrl, exportExcel, fetchProjects } from 'services/api'
 import { incrementDate } from 'utils/time'
 import { _confirm } from "components/PromiseModal"
 import TimeSheetTable from "page-components/TimeSheetTable"
 import Button from "components/Button"
+import Modal from 'components/Modal'
+import { ReactComponent as Spinner } from 'assets/icon/spinner-solid.svg';
 
 const { RangePicker } = DatePicker;
 
-const MAX_DAY_RANGE = 10
+const MAX_DAY_RANGE = 7
 const today = new Date()
 
 const validateRange = (dateRange: [string, string]): number | false => {
@@ -26,6 +28,7 @@ const TimeSheet = () => {
   const [dateRange, setDateRange] = useState<any>([today, incrementDate(today, 6)])
   const [projectFilterList, setProjectFilterList] = useState<any>([])
   const [projectFilterId, setProjectFilterId] = useState(null)
+  const [isExporting, setIsExporting] = useState<boolean>(false)
 
   const onSelectProject = (value: any, options: any) => {
     setProjectFilterId(value)
@@ -42,7 +45,8 @@ const TimeSheet = () => {
   }
 
   const onExportExcel = () => {
-    fetch("https://forth-server.onrender.com/api/v1/timesheet/export_excel")
+    setIsExporting(true)
+    fetch(`${apiUrl}/timesheet/export_excel`)
       .then(res => res.blob())
       .then((blob) => {
         const url = window.URL.createObjectURL(
@@ -59,6 +63,7 @@ const TimeSheet = () => {
         link.click()
         link.parentNode?.removeChild(link)
       })
+    setIsExporting(false)
   }
 
   useEffect(() => {
@@ -98,6 +103,17 @@ const TimeSheet = () => {
         projectFilterId={projectFilterId}
         dateRangeProp={dateRange}
       />
+      {isExporting && (
+        <Modal
+          isShow={false}
+          noModalBg={true}
+          onClose={() => { }}
+        >
+          <div className="m-auto w-14 h-14">
+            <Spinner className="animate-spin stroke-none fill-white" />
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
