@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
-import { InputNumber, notification } from "antd"
+import { Empty, InputNumber, notification, Pagination } from "antd"
 import { createTimesheets, deleteTimesheet, fetchTimesheets } from "services/api"
 import { formatDate, formatTime, incrementDate } from "utils/time"
 import { _confirm } from "components/PromiseModal"
@@ -10,6 +10,7 @@ import DeleteIcon from "components/svg-icon/DeleteIcon"
 import Table from "components/Table"
 import Button from "components/Button"
 import ModelNew from "components/ModelNew"
+import SpinnerIcon from "components/svg-icon/SpinnerIcon"
 
 type TimesheetTableProps = {
   projectFilterId: number | null,
@@ -34,6 +35,8 @@ type formated = {
   Role: string,
   StartDate: string,
 }
+
+let PageSize = 20
 
 function _formatTimeSheet(data: any[], fromDate: Date, range: number, projectId: number | null) {
   let formated: formated[] = []
@@ -106,24 +109,45 @@ function _calcTotalHour(timesheets: any[], projectId: number | null): number {
 const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps) => {
   const [refetchTimesheet, setRefetchTimesheet] = useState(false)
   const [totalHour, setTotalHour] = useState(0)
+  const [isFetching, setIsFetching] = useState(false)
   const [tsData, setTsData] = useState<any>([])
   const [formTimesheetData, setFormTimesheetData] = useState<any>([])
   const fromDate = new Date(dateRangeProp[0] || Date())
   const dateRange = useCallback(_createDateRange(fromDate, 7), [dateRangeProp])
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * PageSize
+    const lastPageIndex = firstPageIndex + PageSize
+    return tsData?.slice(firstPageIndex, lastPageIndex)
+  }, [currentPage, tsData])
 
   const onChangeHours = (hours: number | null, date: string, timesheetId: number) => {
     setFormTimesheetData((timesheetPrev: any[]) => {
       let convertedDateString = formatDate(date).date.toISOString()
       const foundTsIndex = timesheetPrev.findIndex((sheet) => sheet?.TimesheetId == timesheetId)
 
+      // Ts existed
       if (foundTsIndex != -1) {
-        timesheetPrev[foundTsIndex].Segments.push({
-          Hours: hours,
-          Date: convertedDateString,
-        })
+        const foundSegmentIndex = timesheetPrev[foundTsIndex].Segments.findIndex(
+          (segment: Segment) => new Date(segment.Date).toLocaleDateString() == date)
+        // Replace segment if existed
+        if (foundSegmentIndex != -1) {
+          timesheetPrev[foundTsIndex].Segments[foundSegmentIndex] = {
+            Hours: hours,
+            Date: convertedDateString,
+          }
+        } else {
+          // Add new segment
+          timesheetPrev[foundTsIndex].Segments.push({
+            Hours: hours,
+            Date: convertedDateString,
+          })
+        }
         return timesheetPrev
       }
 
+      // Add new timesheet
       return [...timesheetPrev, {
         TimesheetId: timesheetId,
         Segments: [{
@@ -142,6 +166,11 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
           type: 'success',
           message: res.message,
         })
+      } else {
+        notification.open({
+          type: 'error',
+          message: 'Cannot save timesheet',
+        })
       }
     } catch (err) {
       notification.open({
@@ -149,6 +178,7 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
         message: 'Cannot save timesheet',
       })
     }
+    setFormTimesheetData((prev: any) => [])
     setRefetchTimesheet(!refetchTimesheet)
   }
 
@@ -225,7 +255,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
             className="w-16"
             // type="number"
             disabled={time}
-            defaultValue={time}
+            // defaultValue={time}
+            placeholder={time}
             onChange={(value: number | null) => onChangeHours(value, dateRange.date1, timesheetId)}
           />
         </div>
@@ -241,7 +272,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
             className="w-16"
             // type="number"
             disabled={time}
-            defaultValue={time}
+            // defaultValue={time}
+            placeholder={time}
             onChange={(value: number | null) => onChangeHours(value, dateRange.date2, timesheetId)}
           />
         </div>
@@ -257,7 +289,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
             className="w-16"
             // type="number"
             disabled={time}
-            defaultValue={time}
+            // defaultValue={time}
+            placeholder={time}
             onChange={(value: number | null) => onChangeHours(value, dateRange.date3, timesheetId)}
           />
         </div>
@@ -273,7 +306,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
             className="w-16"
             // type="number"
             disabled={time}
-            defaultValue={time}
+            // defaultValue={time}
+            placeholder={time}
             onChange={(value: number | null) => onChangeHours(value, dateRange.date4, timesheetId)}
           />
         </div>
@@ -289,7 +323,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
             className="w-16"
             // type="number"
             disabled={time}
-            defaultValue={time}
+            // defaultValue={time}
+            placeholder={time}
             onChange={(value: number | null) => onChangeHours(value, dateRange.date5, timesheetId)}
           />
         </div>
@@ -305,7 +340,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
             className="w-16"
             // type="number"
             disabled={time}
-            defaultValue={time}
+            // defaultValue={time}
+            placeholder={time}
             onChange={(value: number | null) => onChangeHours(value, dateRange.date6, timesheetId)}
           />
         </div>
@@ -321,7 +357,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
             className="w-16"
             // type="number"
             disabled={time}
-            defaultValue={time}
+            // defaultValue={time}
+            placeholder={time}
             onChange={(value: number | null) => onChangeHours(value, dateRange.date7, timesheetId)}
           />
         </div>
@@ -340,10 +377,19 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
 
   useEffect(() => {
     const fetchTimesheet = async () => {
-      const res = await fetchTimesheets()
+      setIsFetching(true)
+      const res = await fetchTimesheets({
+        projectId: projectFilterId,
+        from: dateRangeProp[0],
+        page: -1,
+        limit: -1,
+        // to: dateRangeProp[]
+      })
       const formated = _formatTimeSheet(res.data, fromDate, 7, projectFilterId)
       setTsData(formated)
       setTotalHour(_calcTotalHour(res.data, projectFilterId))
+      setCurrentPage(1)
+      setIsFetching(false)
     }
     fetchTimesheet()
   }, [refetchTimesheet, dateRangeProp, projectFilterId])
@@ -351,9 +397,30 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
   return (
     <div>
       <div className="w-full overflow-x-auto pb-3">
-        {tsData.length !== 0 && (
-          <Table head={columns} data={tsData} className="border mt-7" />
-        )}
+        {isFetching
+          ? (<div className="rounded-5 border mt-7 h-80 flex justify-center items-center">
+            <div className="m-auto w-10 h-10">
+              <SpinnerIcon className="animate-spin stroke-none fill-black" />
+            </div>
+          </div>)
+          : <>
+            {tsData.length === 0
+              ? <div className="border mt-7 py-10"><Empty /></div>
+              : (
+                <div>
+                  <Table head={columns} data={currentTableData} className="border mt-7" />
+                  <div className="flex justify-center mt-5">
+                    <Pagination
+                      pageSize={PageSize}
+                      total={tsData.length}
+                      onChange={(page: number) => setCurrentPage(page)}
+                    />
+                  </div>
+                </div>
+              )
+            }
+          </>
+        }
       </div>
       <div className="flex flex-col sm:flex-row justify-between gap-4 mt-5">
         <Button

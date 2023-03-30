@@ -114,7 +114,7 @@ const ProjectTable = ({ refetchProject, formData, onShowActionDelete }: ProjectT
   if (isLoading) {
     return (
       <div className="rounded-5 border mt-7 h-80 flex justify-center items-center">
-        <div className="m-auto w-14 h-14">
+        <div className="m-auto w-10 h-10">
           <SpinnerIcon className="animate-spin stroke-none fill-black" />
         </div>
       </div>

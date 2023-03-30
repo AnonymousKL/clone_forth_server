@@ -12,7 +12,8 @@ import { ReactComponent as Spinner } from 'assets/icon/spinner-solid.svg';
 const { RangePicker } = DatePicker;
 
 const MAX_DAY_RANGE = 7
-const today = new Date()
+const initDate = new Date()
+initDate.setDate(initDate.getDate() - 6)
 
 const validateRange = (dateRange: [string, string]): number | false => {
   const fromDateTimestamp = new Date(dateRange[0]).getTime()
@@ -25,7 +26,7 @@ const validateRange = (dateRange: [string, string]): number | false => {
 }
 
 const TimeSheet = () => {
-  const [dateRange, setDateRange] = useState<any>([today, incrementDate(today, 6)])
+  const [dateRange, setDateRange] = useState<any>([initDate, incrementDate(initDate, 6)])
   const [projectFilterList, setProjectFilterList] = useState<any>([])
   const [projectFilterId, setProjectFilterId] = useState(null)
   const [isExporting, setIsExporting] = useState<boolean>(false)
@@ -85,10 +86,11 @@ const TimeSheet = () => {
             style={{ borderRadius: "5px" }}
             onChange={onSelectProject}
             options={projectFilterList}
+            allowClear
           />
           <RangePicker
             className="rounded-5 border-gray-3 py-1.5 leading-6"
-            defaultValue={[dayjs(today), dayjs(incrementDate(today, 6))]}
+            defaultValue={[dayjs(initDate), dayjs(incrementDate(initDate, 6))]}
             onChange={onChangeDateRange}
           />
         </div>

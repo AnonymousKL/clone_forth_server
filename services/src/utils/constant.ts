@@ -21,18 +21,18 @@ export const menus = [
     title: 'Time Sheet',
     link: '/timesheet',
   },
-  {
-    title: 'Sales',
-    link: '/sales',
-  },
-  {
-    title: 'Contract',
-    link: '/contract',
-  },
-  {
-    title: 'Cash Flow',
-    link: '/cashflow',
-  }
+  // {
+  //   title: 'Sales',
+  //   link: '/sales',
+  // },
+  // {
+  //   title: 'Contract',
+  //   link: '/contract',
+  // },
+  // {
+  //   title: 'Cash Flow',
+  //   link: '/cashflow',
+  // }
 ]
 
 export const statusOptions = [

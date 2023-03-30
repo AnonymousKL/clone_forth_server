@@ -11,6 +11,14 @@ export const apiEndpoint = {
   GET_PROJECTS: '/projects',
 }
 
+type timesheetParams = {
+  projectId?: number | null,
+  from?: string,
+  to?: string,
+  page?: number,
+  limit?: number,
+}
+
 export async function fetchProjects(params?: { keyword: string, status: string }) {
   const formatedParams = removeEmptyProps(params)
   const res = await axiosInstance.get(apiUrl + '/projects', { params: formatedParams }).then(res => res.data)
@@ -68,7 +76,7 @@ export async function fetchTeams() {
   return res
 }
 
-export async function fetchTimesheets(params?: { project_name: string, from_date: string }) {
+export async function fetchTimesheets(params?: timesheetParams) {
   const formatedParams = removeEmptyProps(params)
   const res = await axiosInstance.get(apiUrl + '/timesheet', { params: formatedParams }).then(res => res.data)
   return res

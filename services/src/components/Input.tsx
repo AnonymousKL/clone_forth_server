@@ -8,6 +8,9 @@ type InputProps = {
   placeholder?: string,
   value: any,
   required?: boolean,
+  disabled?: boolean,
+  min?: number,
+  step?: number,
   error?: string,
   className?: string,
   onChange?: (e: any) => void,
@@ -19,6 +22,7 @@ const Input = (props: InputProps) => {
 
   const { label, required, onChange } = props
   const handleChange = (e: any) => {
+    // setValue(e.target.value)
     onChange?.(e)
   }
 

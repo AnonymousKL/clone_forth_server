@@ -34,13 +34,13 @@ const Header = () => {
             </div>
           </Link>
         </div>
-        <div className="menu h-fit self-end">
+        <div className="menu h-fit self-end min-w-[70%]">
           <Menu />
         </div>
         <div className="header-right mb-3 h-fit self-end flex">
-          <Search className="hidden lg:block" inputClassName="h-8" />
+          {/* <Search className="hidden lg:block" inputClassName="h-8" /> */}
           <div className="flex items-center">
-            <div className="ml-2 lg:ml-3 cursor-pointer">
+            {/* <div className="ml-2 lg:ml-3 cursor-pointer">
               <RingIcon className="fill-gray-1 hover:fill-black transition-all" />
             </div>
             <div className="ml-3 lg:ml-4 cursor-pointer">
@@ -48,7 +48,7 @@ const Header = () => {
             </div>
             <div className="ml-3 lg:ml-4 cursor-pointer">
               <SettingIcon className="fill-gray-1 hover:fill-black transition-all" />
-            </div>
+            </div> */}
             <div className="ml-3 lg:ml-4 cursor-pointer">
               <UserIcon onClick={logout} />
             </div>
