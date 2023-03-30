@@ -32,7 +32,9 @@ func NewTimesheetHandler(appCtx *appctx.AppCtx) timesheetHandler {
 
 func (th *timesheetHandler) GetAll(ctx *gin.Context) {
 	from, _ := ctx.GetQuery("from")
-	timeSheets := th.timesheetService.GetAll(from)
+	to, _ := ctx.GetQuery("to")
+
+	timeSheets := th.timesheetService.GetAll(from, to)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "success",
 		"data":   timeSheets,
@@ -146,9 +148,37 @@ func (th *timesheetHandler) GetById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": timesheet})
 }
 
+func (th *timesheetHandler) GetByProjectId(ctx *gin.Context) {
+	projectId, err := strconv.Atoi(ctx.Param("id"))
+	from, _ := ctx.GetQuery("from")
+	to, _ := ctx.GetQuery("to")
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": "Cannot parse project id",
+		})
+		return
+	}
+
+	timeSheets, err := th.timesheetService.GetByProjectId(projectId, from, to)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": "Cannot get timesheet",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"data":   timeSheets,
+	})
+}
+
 func (th *timesheetHandler) ExportExcel(ctx *gin.Context) {
 	from, _ := ctx.GetQuery("from")
-	timeSheets := th.timesheetService.GetAll(from)
+	to, _ := ctx.GetQuery("to")
+	timeSheets := th.timesheetService.GetAll(from, to)
 	curTime := time.Now()
 
 	f := excelize.NewFile()

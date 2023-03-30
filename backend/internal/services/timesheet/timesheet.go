@@ -12,7 +12,7 @@ import (
 )
 
 type ITimeSheet interface {
-	GetAll(from string) []models.TimeSheet
+	GetAll(from string, to string) []models.TimeSheet
 	Create(models.TimeSheet) error
 	Update()
 	Delete(id int) error
@@ -20,7 +20,7 @@ type ITimeSheet interface {
 	SaveMultipleTsSegment([]models.MultipleTsSegmentRequest)
 	GetById(id int) (models.TimeSheet, error)
 	GetByMemberId(memberId int, ctx *gin.Context)
-	GetByProjectId()
+	GetByProjectId(projectId int, from string, to string) ([]models.TimeSheet, error)
 }
 
 type TimeSheet struct {
@@ -46,11 +46,14 @@ func NewTimeSheetService(db *gorm.DB) ITimeSheet {
 	}
 }
 
-func (ts *TimeSheet) GetAll(from string) []models.TimeSheet {
+func (ts *TimeSheet) GetAll(from string, to string) []models.TimeSheet {
 	timeSheets := []models.TimeSheet{}
-	query := ts.DB.Limit(10).Offset(0).Preload("Member").Preload("Project").Preload("TimeSheetSegment")
+	query := ts.DB.Preload("Member").Preload("Project").Preload("TimeSheetSegment")
 	if from != "" {
 		query.Where("date >= ?", from)
+	}
+	if to != "" {
+		query.Where("date <= ?", to)
 	}
 	query.Find(&timeSheets)
 
@@ -136,4 +139,21 @@ func (ts *TimeSheet) GetByMemberId(userId int, ctx *gin.Context) {
 		"data": timeSheets,
 	})
 }
-func (ts *TimeSheet) GetByProjectId() {}
+
+func (ts *TimeSheet) GetByProjectId(projectId int, from string, to string) ([]models.TimeSheet, error) {
+	timeSheets := []models.TimeSheet{}
+	query := ts.DB.Preload("Member").Preload("Project").Preload("TimeSheetSegment").Where("project_id = ?", uint(projectId))
+	if from != "" {
+		query.Where("date >= ?", from)
+	}
+	if to != "" {
+		query.Where("date <= ?", to)
+	}
+	query.Find(&timeSheets)
+
+	if query.Error != nil {
+		fmt.Println("Cannot get timesheet by project id")
+		return nil, query.Error
+	}
+	return timeSheets, nil
+}
