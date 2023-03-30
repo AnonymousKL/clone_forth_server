@@ -31,11 +31,16 @@ func NewTimesheetHandler(appCtx *appctx.AppCtx) timesheetHandler {
 }
 
 func (th *timesheetHandler) GetAll(ctx *gin.Context) {
+	var page = ctx.DefaultQuery("page", "1")
+	var limit = ctx.DefaultQuery("limit", "20")
+	intPage, _ := strconv.Atoi(page)
+	intLimit, _ := strconv.Atoi(limit)
+	offset := (intPage - 1) * intLimit
 	from, _ := ctx.GetQuery("from")
 	to, _ := ctx.GetQuery("to")
 	projectIdString, _ := ctx.GetQuery("projectId")
 
-	timeSheets := th.timesheetService.GetAll(from, to, projectIdString)
+	timeSheets := th.timesheetService.GetAll(from, to, projectIdString, offset, intLimit)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "success",
 		"data":   timeSheets,
@@ -179,7 +184,7 @@ func (th *timesheetHandler) GetByProjectId(ctx *gin.Context) {
 func (th *timesheetHandler) ExportExcel(ctx *gin.Context) {
 	from, _ := ctx.GetQuery("from")
 	to, _ := ctx.GetQuery("to")
-	timeSheets := th.timesheetService.GetAll(from, to, "")
+	timeSheets := th.timesheetService.GetAll(from, to, "", -1, -1)
 	curTime := time.Now()
 
 	f := excelize.NewFile()

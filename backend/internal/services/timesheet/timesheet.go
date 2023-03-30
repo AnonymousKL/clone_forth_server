@@ -13,7 +13,7 @@ import (
 )
 
 type ITimeSheet interface {
-	GetAll(from string, to string, projectId string) []models.TimeSheet
+	GetAll(from string, to string, projectId string, offset int, limit int) []models.TimeSheet
 	Create(models.TimeSheet) error
 	Update()
 	Delete(id int) error
@@ -47,14 +47,19 @@ func NewTimeSheetService(db *gorm.DB) ITimeSheet {
 	}
 }
 
-func (ts *TimeSheet) GetAll(from string, to string, projectIdString string) []models.TimeSheet {
+func (ts *TimeSheet) GetAll(from string, to string, projectIdString string, offset int, limit int) []models.TimeSheet {
 	timeSheets := []models.TimeSheet{}
-	query := ts.DB.Preload("Member").Preload("Project").Preload("TimeSheetSegment")
+	now := time.Now()
+	toDate := fmt.Sprintf("%d-%d-%d", now.Year(), now.Month(), now.Day())
+
+	query := ts.DB.Limit(limit).Offset(offset).Preload("Member").Preload("Project")
 	if from != "" {
-		query.Where("date >= ?", from)
-	}
-	if to != "" {
-		query.Where("date <= ?", to)
+		if to != "" {
+			toDate = to
+		}
+		query.Preload("TimeSheetSegment", "date >= ? AND date <= ?", from, toDate)
+	} else {
+		query.Preload("TimeSheetSegment")
 	}
 	if projectIdString != "" {
 		projectId, _ := strconv.Atoi(projectIdString)
@@ -111,30 +116,7 @@ func (ts *TimeSheet) GetByMemberId(userId int, ctx *gin.Context) {
 	from := ctx.Query("from")
 	// timeSheets := []models.TimeSheet{}
 	timeSheets := []map[string]interface{}{}
-
-	// query := ts.DB.Model(&timeSheets).Select("members.name, projects.name, time_sheets.date")
-	// if from != "" {
-	// 	query = query.Where("date >= ?", from)
-	// }
-	// result := query.Joins("JOIN members ON members.id = time_sheets.member_id").Joins("JOIN projects ON projects.id = time_sheet.project_id").Where("member_id = ? AND date >= ?", userId, from).Find(&timeSheets)
-
 	result := ts.DB.Raw("SELECT members.name as MemberName, projects.name as ProjectName, time_sheets.date, time_sheets.track_time FROM time_sheets INNER JOIN members ON time_sheets.member_id = members.id INNER JOIN projects ON time_sheets.project_id = projects.id WHERE member_id = ? AND time_sheets.date >= ?", userId, from).Find(&timeSheets)
-
-	// formatedRes := []TimeSheetResponse{}
-	// for _, record := range timeSheets {
-
-	// 	projectName := record["projectname"].(string)
-	// 	memberName := record["membername"].(string)
-	// 	date := record["date"]
-	// 	trackTime := record["track_time"].(int)
-
-	// 	formatedRes = append(formatedRes, TimeSheetResponse{
-	// 		ProjectName: projectName,
-	// 		MemberName:  memberName,
-	// 		Date:        date,
-	// 		TrackTime:   trackTime,
-	// 	})
-	// }
 
 	if result.Error != nil {
 		fmt.Println("Cannot get timesheet")
@@ -147,14 +129,17 @@ func (ts *TimeSheet) GetByMemberId(userId int, ctx *gin.Context) {
 
 func (ts *TimeSheet) GetByProjectId(projectId int, from string, to string) ([]models.TimeSheet, error) {
 	timeSheets := []models.TimeSheet{}
-	query := ts.DB.Preload("Member").Preload("Project").Preload("TimeSheetSegment").Where("project_id = ?", uint(projectId))
-	if from != "" {
-		query.Where("date >= ?", from)
-	}
+	now := time.Now()
+	toDate := fmt.Sprintf("%d-%d-%d", now.Year(), now.Month(), now.Day())
+
+	query := ts.DB.Preload("Member").Preload("Project")
 	if to != "" {
-		query.Where("date <= ?", to)
+		toDate = to
 	}
-	query.Find(&timeSheets)
+	if from != "" {
+		query.Preload("TimeSheetSegment", "date >= ? AND date <= ?", from, toDate)
+	}
+	query.Where("project_id = ?", projectId).Find(&timeSheets)
 
 	if query.Error != nil {
 		fmt.Println("Cannot get timesheet by project id")

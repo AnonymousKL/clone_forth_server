@@ -66,6 +66,22 @@ func (mh *memberHandler) CreateMember(ctx *gin.Context) {
 		return
 	}
 
+	// Create timesheet for each project-member
+	if len(payload.Projects) != 0 {
+		for _, projectId := range payload.Projects {
+			timesheet := models.TimeSheet{
+				MemberID:  int(member.ID),
+				ProjectID: int(projectId),
+				DayLog: models.DayLog{
+					Date: datatypes.Date(time.Now()),
+				},
+			}
+			if err := mh.timesheetService.Create(timesheet); err != nil {
+				log.Println("Cannot create timesheet for project")
+			}
+		}
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "success",
 		"data":   member,

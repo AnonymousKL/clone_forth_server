@@ -19,7 +19,7 @@ type TimeSheet struct {
 	Member           Member  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	ProjectID        int     `gorm:"default:null;uniqueIndex:mb_prj_date"`
 	Project          Project `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	DayLog           DayLog  `gorm:"embedded;uniqueIndex:mb_prj_date"`
+	DayLog           DayLog  `gorm:"embedded"`
 	Note             string  `gorm:"varchar(255)"`
 	TimeSheetSegment []TimeSheetSegment
 	StartDate        time.Time `gorm:"default:NULL"`
