@@ -8,6 +8,7 @@ import EditIcon from "components/svg-icon/EditIcon"
 import SpinnerIcon from "components/svg-icon/SpinnerIcon"
 import Table from "components/Table"
 import { formatCurrency } from "utils/format"
+import { Empty } from "antd"
 
 type MemberTableProps = {
   refetchProject: boolean,
@@ -121,7 +122,10 @@ const MemberTable = ({ refetchProject, formData, onShowActionDelete }: MemberTab
 
   return (
     <div className="w-full overflow-x-auto pb-3">
-      <Table head={columns} data={formatedData} className="border mt-7" />
+      {data?.length === 0
+        ? <div className="border mt-7 py-10"><Empty /></div>
+        : (<Table head={columns} data={formatedData} className="border mt-7" />)
+      }
     </div>
   )
 }

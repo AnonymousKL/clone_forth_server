@@ -9,6 +9,7 @@ import DeleteIcon from "components/svg-icon/DeleteIcon"
 import EditIcon from "components/svg-icon/EditIcon"
 import SpinnerIcon from "components/svg-icon/SpinnerIcon"
 import Table from "components/Table"
+import { Empty } from "antd"
 
 type ProjectTableProps = {
   refetchProject: boolean,
@@ -137,7 +138,10 @@ const ProjectTable = ({ refetchProject, formData, onShowActionDelete }: ProjectT
 
   return (
     <div className="w-full overflow-x-auto pb-3">
-      <Table head={columns} data={formatedData} className="border mt-7" />
+      {data?.length === 0
+        ? <div className="border mt-7 py-10"><Empty /></div>
+        : (<Table head={columns} data={formatedData} className="border mt-7" />)
+      }
     </div>
   )
 }

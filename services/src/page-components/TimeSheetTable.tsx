@@ -381,8 +381,8 @@ const TimeSheetTable = ({ dateRangeProp, projectFilterId }: TimesheetTableProps)
       const res = await fetchTimesheets({
         projectId: projectFilterId,
         from: dateRangeProp[0],
-        page: -1,
-        limit: -1,
+        // page: -1,
+        // limit: -1,
         // to: dateRangeProp[]
       })
       const formated = _formatTimeSheet(res.data, fromDate, 7, projectFilterId)
