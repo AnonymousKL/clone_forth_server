@@ -26,6 +26,7 @@ type Project struct {
 	ClientName     string    `gorm:"type:varchar(255);"`
 	Budget         float32   `gorm:"type:decimal(20,3);"`
 	ActualReceived float32   `gorm:"type:decimal(20,3);"`
+	ActualCost     float32   `gorm:"type:decimal(20,3);"`
 	StartDate      time.Time `gorm:"default:NULL"`
 	EndDate        time.Time `gorm:"default:NULL"`
 }

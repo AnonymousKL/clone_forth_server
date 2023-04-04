@@ -18,6 +18,7 @@ type IProjectService interface {
 	Update(id int, payload *models.CreateProjectRequest, ctx *gin.Context) (models.Project, error)
 	Delete(id int) error
 	AssignMembersToProject(projectId int, memberIds []uint) error
+	UpdateActualCost(id int, cost float32) error
 }
 
 type ProjectService struct {
@@ -131,6 +132,12 @@ func (ps *ProjectService) Update(id int, payload *models.CreateProjectRequest, c
 func (ps *ProjectService) Delete(id int) error {
 	result := ps.DB.Delete(&models.Project{}, id)
 	return result.Error
+}
+
+func (ps *ProjectService) UpdateActualCost(id int, cost float32) error {
+	project := models.Project{Model: gorm.Model{ID: uint(id)}}
+	err := ps.DB.Model(&project).Update("actual_cost", cost).Error
+	return err
 }
 
 func (ps *ProjectService) AssignMembersToProject(projectId int, memberIds []uint) error {

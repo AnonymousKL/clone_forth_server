@@ -11,6 +11,7 @@ import (
 
 	"http-server/internal/appctx"
 	"http-server/internal/models"
+	"http-server/internal/services/project"
 	"http-server/internal/services/timesheet"
 
 	"github.com/gin-gonic/gin"
@@ -21,12 +22,17 @@ import (
 type timesheetHandler struct {
 	appCtx           *appctx.AppCtx
 	timesheetService timesheet.ITimeSheet
+	projectService   project.IProjectService
 }
+
+const FIXED_PRICE = 20
+const FIXED_RATE = 1.5
 
 func NewTimesheetHandler(appCtx *appctx.AppCtx) timesheetHandler {
 	return timesheetHandler{
 		appCtx:           appCtx,
 		timesheetService: appCtx.GetTimesheetService(),
+		projectService:   appCtx.GetProjectService(),
 	}
 }
 
@@ -131,6 +137,7 @@ func (th *timesheetHandler) SaveMultipleTsSegment(ctx *gin.Context) {
 				Date:        segmentNode.Date,
 			})
 		}
+
 		err := th.timesheetService.SaveSegment(segment.TimesheetId, segmentModels)
 		if err != nil {
 			errFlag = true
@@ -139,7 +146,22 @@ func (th *timesheetHandler) SaveMultipleTsSegment(ctx *gin.Context) {
 				"message": err.Error(),
 			})
 		}
+
+		// Calc cost by timesheetSegment and update to project
+		timesheet, _ := th.timesheetService.GetById(segment.TimesheetId)
+		projectId := timesheet.ProjectID
+		var totalHours float32
+		var totalCost float32
+		for _, segment := range timesheet.TimeSheetSegment {
+			totalHours += segment.Hours
+		}
+		totalCost = totalHours * FIXED_PRICE * FIXED_RATE
+		saveErr := th.projectService.UpdateActualCost(projectId, totalCost)
+		if saveErr != nil {
+			log.Printf("Error on update project cost: %s", saveErr.Error())
+		}
 	}
+
 	if errFlag == false {
 		ctx.JSON(http.StatusCreated, gin.H{
 			"status":  "success",
