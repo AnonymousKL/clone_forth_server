@@ -30,9 +30,8 @@ const formatProjectsData = (data: any) => {
     StartDate: formatTime(item.StartDate),
     EndDate: formatTime(item.EndDate),
     Participants: item.Members?.length,
-    ActualCost: formatCurrency(2300),
-    Health: item.Health.Health,
-    // HealthReason: item.Health.HealthReason,
+    ActualCost: formatCurrency(item.ActualCost),
+    Health: item.ActualCost > item.Budget ? "Bad" : item.ActualCost < item.Budget ? "Good" : "Normal",
     Priority: {
       priority: item.Priority
     },

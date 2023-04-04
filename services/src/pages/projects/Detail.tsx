@@ -128,7 +128,7 @@ const ProjectDetail = () => {
               <label htmlFor="ActualReceived">Actual Cost</label>
               <InputNumber
                 className='mt-10p block w-full rounded-5 border border-gray-2 outline-none hover:border-[#4096ff] transition'
-                defaultValue={data.ActualReceived || ''}
+                defaultValue={data.ActualCost || ''}
                 formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 disabled
