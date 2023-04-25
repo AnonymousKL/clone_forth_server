@@ -1,0 +1,16 @@
+[
+  {
+    "path": "/user",
+    "data": {
+      "id": 1,
+      "name": "Anonymous",
+      "role": "admin"
+    }
+  },
+  {
+    "path": "/login",
+    "data": {
+      "token": "success_token"
+    }
+  }
+]

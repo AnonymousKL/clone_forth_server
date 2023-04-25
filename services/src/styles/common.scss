@@ -1,0 +1,28 @@
+.text-pri-highest,
+.text-pri-high {
+  @apply text-red-1;
+}
+.text-pri-medium {
+  @apply text-orange-1;
+}
+.text-pri-low {
+  @apply text-primary-2;
+}
+.text-pri-lowest {
+  @apply text-primary-1;
+}
+.status-planning {
+  @apply bg-green-2;
+}
+.status-inprogress {
+  @apply bg-primary-4;
+}
+.status-completed {
+  @apply bg-green-1;
+}
+.status-overdue {
+  @apply bg-red-1;
+}
+.status-cancel {
+  @apply bg-gray-1;
+}
