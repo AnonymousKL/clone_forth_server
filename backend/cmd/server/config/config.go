@@ -21,7 +21,7 @@ type Config struct {
 func LoadConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigType("env")
-	viper.SetConfigName("staging")
+	viper.SetConfigName("stagingAws")
 
 	viper.AutomaticEnv()
 
@@ -36,10 +36,10 @@ func LoadConfig(path string) (config Config, err error) {
 
 func GetDsn(config *Config) string {
 	// Used for local
-	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
-	// 	config.DBHost, config.DBUserName, config.DBUserPassword, config.DBName, config.DBPort)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+		config.DBHost, config.DBUserName, config.DBUserPassword, config.DBName, config.DBPort)
 
-	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s", config.DBUserName, config.DBUserPassword, config.DBHost, config.DBName)
+	// dsn := fmt.Sprintf("postgres://%s:%s@%s/%s", config.DBUserName, config.DBUserPassword, config.DBHost, config.DBName)
 
 	// DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	// if err != nil {
